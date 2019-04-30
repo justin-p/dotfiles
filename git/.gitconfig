@@ -11,7 +11,7 @@
     status = auto
     ui = true
 	editor = code -n -w # VS Code	
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore_global
 	
 [color]
 	ui = true	

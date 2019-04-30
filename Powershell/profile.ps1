@@ -1,25 +1,29 @@
 # Chocolatey
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
+    Import-Module "$ChocolateyProfile"
 }
 # Modules
 $Modules = @( 
     "posh-git",    
     "oh-my-posh",
-    "windows-screenfetch"
+    "windows-screenfetch",
+    "Get-ChildItemColor"
 )
 ForEach ($Module in $Modules) { 
-    if(Get-Module -Name $Module -ListAvailable) {
+    if (Get-Module -Name $Module -ListAvailable) {
         Import-Module $Module
         If ($Module -eq 'oh-my-posh') {
-                Set-Theme Paradox
+            Set-Theme Paradox
         }
-        If ($Module -eq 'Screenfetch') {
-                Screenfetch
-        }       
+        If ($Module -eq 'windows-screenfetch') {
+            Screenfetch
+        }     
+        If ($Module -eq 'Get-ChildItemColor') {
+            Set-Alias ls Get-ChildItemColorFormatWide -option AllScope
+        }   
     }
-    if(!(Get-Module $Module) ) {
+    if (!(Get-Module $Module) ) {
         Write-Warning "Missing $($Module) support, install $($Module) with 'Install-Module $($Module)'."
     }
 }
