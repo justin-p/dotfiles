@@ -1,0 +1,23 @@
+[user]
+	name = Justin-p
+	email = justin-p@users.noreply.github.com
+
+[core]
+	autocrlf = false
+    branch = auto
+    diff = auto
+    interactive = auto
+    pager = true
+    status = auto
+    ui = true
+	editor = code -n -w # VS Code	
+	excludesfile = ~/.gitignore
+	
+[color]
+	ui = true	
+	
+[push]
+	default = current	
+ 
+[includeIf "gitdir/i:C:/_git/git.graficom.om/"]
+  path = .gitconfig-graficom
