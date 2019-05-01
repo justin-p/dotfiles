@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2019-05-01 19:51:13" build="180626">
+		<key name=".Vanilla" modified="2019-05-01 21:03:37" build="180626">
 			<value name="ColorTable00" type="dword" data="0040342e"/>
 			<value name="ColorTable01" type="dword" data="00926c47"/>
 			<value name="ColorTable02" type="dword" data="00518e6c"/>
@@ -537,7 +537,7 @@
 			<key name="Apps" modified="2018-02-22 06:05:13" build="171109">
 				<value name="Count" type="long" data="0"/>
 			</key>
-			<key name="Colors" modified="2018-02-22 06:05:13" build="171109">
+			<key name="Colors" modified="2019-05-01 21:03:37" build="180626">
 				<key name="Palette1" modified="2018-02-22 06:05:13" build="171109">
 					<value name="Name" type="string" data="Monokai"/>
 					<value name="ExtendColors" type="hex" data="00"/>
@@ -580,10 +580,8 @@
 					<value name="ColorTable31" type="dword" data="00ffffff"/>
 				</key>
 				<value name="Count" type="long" data="2"/>
-				<key name="Palette2" modified="2017-10-14 09:05:45" build="170910">
+				<key name="Palette2" modified="2019-05-01 21:03:37" build="180626">
 					<value name="Name" type="string" data="Nord"/>
-					<value name="ExtendColors" type="hex" data="00"/>
-					<value name="ExtendColorIdx" type="hex" data="0e"/>
 					<value name="TextColorIdx" type="hex" data="10"/>
 					<value name="BackColorIdx" type="hex" data="10"/>
 					<value name="PopTextColorIdx" type="hex" data="10"/>
@@ -604,22 +602,6 @@
 					<value name="ColorTable13" type="dword" data="007b5683"/>
 					<value name="ColorTable14" type="dword" data="0031a4db"/>
 					<value name="ColorTable15" type="dword" data="00f4efec"/>
-					<value name="ColorTable16" type="dword" data="00000000"/>
-					<value name="ColorTable17" type="dword" data="00800000"/>
-					<value name="ColorTable18" type="dword" data="00008000"/>
-					<value name="ColorTable19" type="dword" data="00808000"/>
-					<value name="ColorTable20" type="dword" data="00000080"/>
-					<value name="ColorTable21" type="dword" data="00800080"/>
-					<value name="ColorTable22" type="dword" data="00008080"/>
-					<value name="ColorTable23" type="dword" data="00c0c0c0"/>
-					<value name="ColorTable24" type="dword" data="00808080"/>
-					<value name="ColorTable25" type="dword" data="00ff0000"/>
-					<value name="ColorTable26" type="dword" data="0000ff00"/>
-					<value name="ColorTable27" type="dword" data="00ffff00"/>
-					<value name="ColorTable28" type="dword" data="000000ff"/>
-					<value name="ColorTable29" type="dword" data="00ff00ff"/>
-					<value name="ColorTable30" type="dword" data="0000ffff"/>
-					<value name="ColorTable31" type="dword" data="00ffffff"/>
 				</key>
 			</key>
 			<value name="OneTabPerGroup" type="hex" data="00"/>
