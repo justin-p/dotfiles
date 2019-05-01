@@ -1,12 +1,14 @@
 See RobbOwen.synthwave-vscode
 
-Placed in this repo so its in the same place on every system. Settings.json (and other things) are synced using shan.code-settings-sync.  
+Placed in this repo so its in the same place on every system. Settings.json (and other things) are synced using shan.code-settings-sync.    
+
+![vscode](https://raw.githubusercontent.com/justin-p/Setup-My-W10-Machine/wsl-automation/_img/Code_YNk0nJukB8.png)
 
 Example of settings.json (01-05-2019)
 
 ```json
 {
-    "vscode_custom_css.imports": ["file:///C:/_git/github/dotfiles/vscode/synthwave84.css"],
+    "vscode_custom_css.imports": ["file:///C:/_git/github/dotfiles/vscode/synthwave84.css"],   
     "git.autofetch": true,
     "git.confirmSync": false,
     "gitlens.advanced.messages": {
@@ -39,6 +41,8 @@ Example of settings.json (01-05-2019)
     ],
     "font-switcher.fontFamily": "'Fira Code','Fira Code Retina','Meslo LG M for Powerline', Consolas, 'Courier New', monospace",
     "font-switcher.enableLivePreview": true,
-    "editor.fontFamily": "'Fira Code Retina'",
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Meslo LG M for Powerline'",
+    "terminal.integrated.fontFamily": "'Meslo LG M for Powerline'"
 }
+```
