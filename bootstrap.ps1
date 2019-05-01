@@ -67,8 +67,9 @@ Push-Location $DotFilesPath
 try {
     # PowerShell
     # 	StowFile $Global:PROFILE (Get-Item "powershell\Microsoft.PowerShell_profile.ps1").FullName
+    StowFile $("$env:HOME\Documents\WindowsPowerShell\PoshThemes\my-theme.psm1") (Get-Item "Powershell\my-theme.psm1").FullName
     # Git
-    StowFile $env:HOME/.gitconfig (Get-Item "git\.gitconfig").FullName
+    StowFile $env:HOME/.gitconfig (Get-Item "git\.gitconfig").FullName 
     StowFile $env:HOME/.gitignore (Get-Item "git\.gitignore").FullName	   
     git config --global core.excludesfile ~/.gitignore_global	
     # Vim
