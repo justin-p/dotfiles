@@ -14,13 +14,13 @@ ForEach ($Module in $Modules) {
     if (Get-Module -Name $Module -ListAvailable) {
         Import-Module $Module
         If ($Module -eq 'oh-my-posh') {
-            Set-Theme Paradox
+            Set-Theme my-theme
         }
         If ($Module -eq 'windows-screenfetch') {
             Screenfetch
         }     
         If ($Module -eq 'Get-ChildItemColor') {
-            Set-Alias ls Get-ChildItemColorFormatWide -option AllScope
+            Set-Alias ls Get-ChildItemColor -option AllScope
         }   
     }
     if (!(Get-Module $Module) ) {
