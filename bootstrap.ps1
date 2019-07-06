@@ -66,7 +66,7 @@ $DotFilesPath = Split-Path $MyInvocation.MyCommand.Path
 Push-Location $DotFilesPath
 try {
     # PowerShell
-    # 	StowFile $Global:PROFILE (Get-Item "powershell\Microsoft.PowerShell_profile.ps1").FullName
+    StowFile $Global:Profile.CurrentUserAllHost (Get-Item "powershell\Microsoft.PowerShell_profile.ps1").FullName
     StowFile $("$env:HOME\Documents\WindowsPowerShell\PoshThemes\my-theme.psm1") (Get-Item "Powershell\my-theme.psm1").FullName
     # Git
     StowFile $env:HOME/.gitconfig (Get-Item "git\.gitconfig").FullName 
