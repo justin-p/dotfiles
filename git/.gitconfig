@@ -19,7 +19,7 @@
 [push]
 	default = current	
  
-[includeIf "gitdir/i:C:/_git/git.graficom.om/"]
+[includeIf "gitdir/i:C:/_git/git.graficom.com/"]
   path = .gitconfig-graficom
 [filter "lfs"]
 	required = true

@@ -66,7 +66,8 @@ $DotFilesPath = Split-Path $MyInvocation.MyCommand.Path
 Push-Location $DotFilesPath
 try {
     # PowerShell
-    StowFile $Global:Profile.CurrentUserAllHosts (Get-Item "powershell\profile.ps1").FullName
+    Move-Item C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml -Destination C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml.bak
+    StowFile C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml (Get-Item "ConEmu\ConEmu.xml").FullName
     StowFile $("$env:HOME\Documents\WindowsPowerShell\PoshThemes\my-theme.psm1") (Get-Item "Powershell\my-theme.psm1").FullName
     # Git
     StowFile $env:HOME/.gitconfig (Get-Item "git\.gitconfig").FullName 
@@ -75,6 +76,8 @@ try {
     # Vim
     StowFile "$env:HOME\_vimrc" (Get-Item "vim\.vimrc").FullName
     # VS Code
+    # not needed. 
+    # done with vscode plugin.
     #StowFile $env:APPDATA\Code\User\settings.json (Get-Item "vscode\settings.json").FullName
     #StowFile $env:APPDATA\Code\User\keybindings.json (Get-Item "vscode\keybindings.json").FullName
 }
