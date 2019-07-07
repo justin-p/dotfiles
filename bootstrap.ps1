@@ -81,6 +81,7 @@ try {
     # done with vscode plugin.
     # StowFile $env:APPDATA\Code\User\settings.json (Get-Item "vscode\settings.json").FullName
     # StowFile $env:APPDATA\Code\User\keybindings.json (Get-Item "vscode\keybindings.json").FullName
+    reg import "clipboardfusion\ClipboardFusion.reg"
 }
 finally {
     Pop-Location
