@@ -1,0 +1,21 @@
+[legacy/profiles:/:796aac8f-9534-414c-99dd-04d57b1531e3]
+foreground-color='#d6d6dbdbe5e5'
+visible-name='BeardedThemeBlue'
+palette=['rgb(11,15,25)', 'rgb(194,71,71)', 'rgb(77,179,111)', 'rgb(196,145,55)', 'rgb(75,156,210)', 'rgb(195,96,215)', 'rgb(48,166,156)', 'rgb(187,187,187)', 'rgb(75,156,210)', 'rgb(194,71,71)', 'rgb(0,255,106)', 'rgb(196,145,55)', 'rgb(75,156,210)', 'rgb(195,96,215)', 'rgb(75,156,210)', 'rgb(238,238,236)']
+bold-is-bright=false
+use-system-font=false
+use-transparent-background=true
+highlight-colors-set=true
+use-theme-colors=false
+font='FiraCode Nerd Font Mono weight=450 12'
+use-theme-transparency=false
+allow-bold=true
+bold-color-same-as-fg=true
+bold-color='#d6d6dbdbe5e5'
+background-color='#131313131313'
+background-transparency-percent=16
+highlight-background-color='#'
+highlight-foreground-color='#'
+
+[legacy]
+schema-version=uint32 3
