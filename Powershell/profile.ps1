@@ -14,7 +14,7 @@ ForEach ($Module in $Modules) {
     if (Get-Module -Name $Module -ListAvailable) {
         Import-Module $Module
         If ($Module -eq 'oh-my-posh') {
-            Set-Theme my-theme
+            Set-Theme Paradox
         }
         If ($Module -eq 'windows-screenfetch') {
             Screenfetch

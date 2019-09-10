@@ -15,7 +15,8 @@ try {
     # Dotfiles
     git pull --ff-only
     # Chocolatey
-    cup all -y
+    # Exclude mobaxterm so it does not overwrite license  ¯\_(ツ)_/¯
+    cup all -y --except mobaxterm
 }
 finally {
     popd

@@ -65,22 +65,31 @@ if (-not $env:HOME) {
 $DotFilesPath = Split-Path $MyInvocation.MyCommand.Path
 Push-Location $DotFilesPath
 try {
-    # PowerShell
     Move-Item "C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml"   -Destination "C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml.bak"
     StowFile $("C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml") (Get-Item "ConEmu\ConEmu.xml").FullName
-    StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.VSCode_profile.ps1") (Get-Item "Powershell\profile.ps1").FullName
-    StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "PoshThemes\my-theme.psm1")     (Get-Item "Powershell\my-theme.psm1").FullName
-    # Git
+    Try {
+        StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.VSCode_profile.ps1") (Get-Item "Powershell\profile.ps1").FullName
+    } Catch {
+        Write-Verbose "Might be profile redirection to networkshare. Should make a check for that, for now just copy the file over."
+        Copy-Item (Get-Item "Powershell\profile.ps1").FullName $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.VSCode_profile.ps1")
+    }
+    Try {
+        StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.PowerShell_profile.ps1") (Get-Item "Powershell\profile.ps1").FullName    
+    } Catch {
+        Write-Verbose "Might be profile redirection to networkshare. Should make a check for that, for now just copy the file over."        
+        Copy-Item (Get-Item "Powershell\profile.ps1").FullName $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.PowerShell_profile.ps1")
+    }
+    Try {
+        StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.PowerShellISE_profile.ps1") (Get-Item "Powershell\Microsoft.PowerShellISE_profile.ps1").FullName    
+    } Catch {
+        Write-Verbose "Might be profile redirection to networkshare. Should make a check for that, for now just copy the file over."        
+        Copy-Item (Get-Item "Powershell\Microsoft.PowerShellISE_profile.ps1").FullName $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.PowerShellISE_profile.ps1")
+    }    
+    StowFile $("~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json") (Get-Item "windows-terminal\profiles.json").FullName
     StowFile $env:HOME/.gitconfig (Get-Item "git\.gitconfig").FullName 
     StowFile $env:HOME/.gitignore (Get-Item "git\.gitignore").FullName	   
     git config --global core.excludesfile ~/.gitignore_global	
-    # Vim
     StowFile "$env:HOME\_vimrc" (Get-Item "vim\.vimrc").FullName
-    # VS Code
-    # not needed. 
-    # done with vscode plugin.
-    # StowFile $env:APPDATA\Code\User\settings.json (Get-Item "vscode\settings.json").FullName
-    # StowFile $env:APPDATA\Code\User\keybindings.json (Get-Item "vscode\keybindings.json").FullName
     reg import "clipboardfusion\ClipboardFusion.reg"
 }
 finally {
