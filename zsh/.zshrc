@@ -12,7 +12,7 @@ antigen bundles <<EOBUNDLES
     heroku
     pip
     lein
-    command-not-found
+    command-not-found 
     tmux
     docker
     docker-compose
@@ -22,14 +22,13 @@ antigen bundles <<EOBUNDLES
     ssh-agent
     zsh-users/zsh-syntax-highlighting
     zsh-users/zsh-autosuggestions
-    zsh-users/zsh-completions
+    zsh-users/zsh-completions      
 EOBUNDLES
 
 antigen theme romkatv/powerlevel10k
 POWERLEVEL9K_MODE="awesome-patched"
 
 antigen apply
-
 
 # ColorLS
 export PATH="$HOME/.rbenv/bin:$PATH"
@@ -41,10 +40,10 @@ alias ls='colorls --sd -A'
 # Invoke-Item
 alias ii=xdg-open
 
-# stepstone connect
+# ssh shorthand commands
 alias stepstone='ssh justin@stepstone -N'
-
 alias pggm='ssh justin@pggm -N'
+alias shellserver='ssh justin@shellserver'
 
 # firefox-dev
 alias firefox-dev='~/tools/firefox/firefox'
@@ -68,3 +67,5 @@ setopt HIST_BEEP
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# ssh-add alias
+alias ssh-add='ssh-add -t 1h'
