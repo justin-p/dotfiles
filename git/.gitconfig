@@ -1,26 +1,30 @@
 [user]
-	name = Justin-p
-	email = justin-p@users.noreply.github.com
+    name = Justin-p
+    email = justin-p@users.noreply.github.com
+[includeIf "gitdir:~/git/gitlab-work/"]
+    path = .gitconfig-work
+[includeIf "gitdir:~/.ansible/tmp/"]
+    path = .gitconfig-work
 
 [core]
-	autocrlf = false
+    autocrlf = false
     branch = auto
     diff = auto
     interactive = auto
     pager = true
     status = auto
     ui = true
-	editor = code -n -w # VS Code	
-	excludesfile = ~/.gitignore_global
-	
+    editor = code -n -w # VS Code
+    excludesfile = ~/.gitignore_global
+    
 [color]
-	ui = true	
-	
+    ui = true
+    
 [push]
-	default = current	
+    default = current
 
 [filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
