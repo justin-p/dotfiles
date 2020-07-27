@@ -31,11 +31,11 @@ POWERLEVEL9K_MODE="awesome-patched"
 antigen apply
 
 # ColorLS
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-source $(dirname $(gem which colorls))/tab_complete.sh
-alias ls='colorls --sd -A'
+# export PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
+# export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+# source $(dirname $(gem which colorls))/tab_complete.sh
+# alias ls='colorls --sd -A'
 
 # Invoke-Item
 alias ii=xdg-open
