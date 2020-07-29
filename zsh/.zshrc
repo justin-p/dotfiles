@@ -1,53 +1,8 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+source <(antibody init)
+antibody bundle < ~/.zsh_plugins
 
-source ~/.antigen.zsh
-antigen use oh-my-zsh
-antigen bundles <<EOBUNDLES
-    git
-    heroku
-    pip
-    lein
-    command-not-found 
-    tmux
-    docker
-    docker-compose
-    emoji
-    encode64
-    vscode
-    ssh-agent
-    zsh-users/zsh-syntax-highlighting
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-completions      
-EOBUNDLES
-
-antigen theme romkatv/powerlevel10k
-POWERLEVEL9K_MODE="awesome-patched"
-
-antigen apply
-
-# ColorLS
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
-# export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-# source $(dirname $(gem which colorls))/tab_complete.sh
-# alias ls='colorls --sd -A'
-
-# Invoke-Item
-alias ii=xdg-open
-
-# ssh shorthand commands
-alias stepstone='ssh justin@stepstone -N'
-alias pggm='ssh justin@pggm -N'
-alias shellserver='ssh justin@shellserver'
-
-# firefox-dev
-alias firefox-dev='~/tools/firefox/firefox'
-
+# aliasses
+[ -f ~/.zsh_alias ] && source ~/.zsh_alias
 # fzf search
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -64,8 +19,9 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# ssh-add alias
-alias ssh-add='ssh-add -t 1h'
+# Spaceship prompt
+SPACESHIP_CHAR_SYMBOL="$"
+SPACESHIP_CHAR_SUFFIX=" "
+SPACESHIP_CHAR_COLOR_SUCCESS="magenta"
+SPACESHIP_TIME_SHOW=true
+SPACESHIP_TIME_COLOR="blue"
