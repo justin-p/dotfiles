@@ -1,4 +1,5 @@
 source <(antibody init)
+ZSH="$(antibody home)/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh"
 antibody bundle < ~/.zsh_plugins
 
 # aliasses
