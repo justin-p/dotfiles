@@ -384,3 +384,4 @@ endfunction
 set number
 
 let g:airline_theme='zenburn'
+colorscheme nord
