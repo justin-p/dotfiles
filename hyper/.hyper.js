@@ -138,6 +138,18 @@ module.exports = {
     webGLRenderer: true,
 
     // for advanced config flags please refer to https://hyper.is/#cfg
+    //
+    ////
+
+    // Plugins
+
+    hyperTabs: {
+      trafficButtons: true,
+      border: true,
+      tabIcons: true,
+      tabIconsColored: true,
+      closeAlign: 'right',
+    }
   },
 
   // a list of plugins to fetch and install from npm
@@ -146,7 +158,12 @@ module.exports = {
   //   `hyperpower`
   //   `@company/project`
   //   `project#1.0.1`
-  plugins: ["hyper-chesterish", "hyperocean"],
+  plugins: [
+    "hyper-chesterish",
+    "hypercwd",
+    "hyper-search",
+    "hyper-tabs-enhanced"
+  ],
 
   // in development, you can create a directory under
   // `~/.hyper_plugins/local/` and include it here
