@@ -9,7 +9,7 @@ robbyrussell/oh-my-zsh path:plugins/emoji
 robbyrussell/oh-my-zsh path:plugins/vscode
 
 greymd/docker-zsh-completion
-zsh-users/zsh-syntax-highlighting
+Aloxaf/fzf-tab
+zdharma/fast-syntax-highlighting
 zsh-users/zsh-autosuggestions
-zsh-users/zsh-completions
 denysdovhan/spaceship-prompt

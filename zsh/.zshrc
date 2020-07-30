@@ -4,6 +4,7 @@ antibody bundle < ~/.zsh_plugins
 
 # aliasses
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
+
 # fzf search
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -19,6 +20,9 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
+
+# fzf-tab
+zstyle ':completion:*:descriptions' format '[%d]'
 
 # Spaceship prompt
 SPACESHIP_CHAR_SYMBOL="$"
