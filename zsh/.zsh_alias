@@ -6,7 +6,6 @@ alias ii='xdg-open'
 
 # ssh shorthand commands
 alias stepstone='ssh justin@stepstone -N'
-alias pggm='ssh justin@pggm -N'
 alias shellserver='ssh justin@shellserver'
 
 # ssh-add alias
