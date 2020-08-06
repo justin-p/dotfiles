@@ -4,6 +4,9 @@ alias ls='lsd'
 # bat
 alias cat='bat'
 
+# ripgrep
+alias grep='rg'
+
 # Invoke-Item
 alias ii='xdg-open'
 
