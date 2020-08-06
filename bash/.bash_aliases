@@ -1,6 +1,9 @@
 # LSDeluxe
 alias ls='lsd'
 
+# bat
+alias cat='bat'
+
 # Invoke-Item
 alias ii='xdg-open'
 
