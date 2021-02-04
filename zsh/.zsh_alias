@@ -2,7 +2,7 @@
 alias ls='lsd'
 
 # bat
-alias cat='bat'
+alias cat='batcat'
 
 # ripgrep
 alias grep='rg'
