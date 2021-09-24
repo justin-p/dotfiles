@@ -30,3 +30,6 @@ SPACESHIP_CHAR_SUFFIX=" "
 SPACESHIP_CHAR_COLOR_SUCCESS="magenta"
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_TIME_COLOR="blue"
+
+# extend path
+export PATH=~/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:$PATH
