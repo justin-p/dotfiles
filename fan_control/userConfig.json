@@ -1,0 +1,339 @@
+{
+  "Main": {
+    "DisplayTrayIconTemperature": true,
+    "ShowHiddenCards": false,
+    "HideFanSpeedCards": false,
+    "StartMinimized": true,
+    "FanCurves": [
+      {
+        "Points": [
+          "40,45.4674074074074",
+          "45,49.9118518518518",
+          "60,49.9118518518518",
+          "65,55.2451851851852",
+          "70,59.6896296296296",
+          "75,75.022962962963",
+          "80,99.9118518518518"
+        ],
+        "SelectedIndex": 0,
+        "SelectedIndexValue": 45.4674074074074,
+        "SelectedIndexTemp": 40.0,
+        "SelectedTempSource": {
+          "Name": "Core Average",
+          "Identifier": "/intelcpu/0/temperature/10",
+          "IsHidden": false
+        },
+        "SelectedHysteresis": 2,
+        "SelectedResponseTime": 1,
+        "OneWayHysteresis": false,
+        "Name": "Graph"
+      }
+    ],
+    "Controls": [
+      {
+        "Enable": false,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": {
+          "IsHidden": false,
+          "NickName": "GeForce RTX 2080 Ti",
+          "Name": "Fan 1 - NVIDIA GeForce RTX 2080 Ti",
+          "Identifier": "NVApiWrapper/256/fan/0"
+        },
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Control 1 - NVIDIA GeForce RTX 2080 Ti",
+        "NickName": "GeForce RTX 2080 Ti",
+        "Identifier": "NVApiWrapper/256/control/0",
+        "IsHidden": false
+      },
+      {
+        "Enable": false,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": {
+          "IsHidden": false,
+          "NickName": "GeForce RTX 2080 Ti",
+          "Name": "Fan 2 - NVIDIA GeForce RTX 2080 Ti",
+          "Identifier": "NVApiWrapper/256/fan/1"
+        },
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Control 2 - NVIDIA GeForce RTX 2080 Ti",
+        "NickName": "GeForce RTX 2080 Ti",
+        "Identifier": "NVApiWrapper/256/control/1",
+        "IsHidden": false
+      },
+      {
+        "Enable": false,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": null,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #1",
+        "NickName": "Fan Control #1",
+        "Identifier": "/lpc/nct6792d/control/0",
+        "IsHidden": true
+      },
+      {
+        "Enable": false,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": null,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #2",
+        "NickName": "Fan Control #2",
+        "Identifier": "/lpc/nct6792d/control/1",
+        "IsHidden": true
+      },
+      {
+        "Enable": true,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": {
+          "IsHidden": false,
+          "NickName": "Outtake",
+          "Name": "Fan #3",
+          "Identifier": "/lpc/nct6792d/fan/2"
+        },
+        "SelectedFanCurve": {
+          "Points": [
+            "40,45.4674074074074",
+            "45,49.9118518518518",
+            "60,49.9118518518518",
+            "65,55.2451851851852",
+            "70,59.6896296296296",
+            "75,75.022962962963",
+            "80,99.9118518518518"
+          ],
+          "SelectedIndex": 0,
+          "SelectedIndexValue": 45.4674074074074,
+          "SelectedIndexTemp": 40.0,
+          "SelectedTempSource": {
+            "Name": "Core Average",
+            "Identifier": "/intelcpu/0/temperature/10",
+            "IsHidden": false
+          },
+          "SelectedHysteresis": 2,
+          "SelectedResponseTime": 1,
+          "OneWayHysteresis": false,
+          "Name": "Graph"
+        },
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #3",
+        "NickName": "Outtake",
+        "Identifier": "/lpc/nct6792d/control/2",
+        "IsHidden": false
+      },
+      {
+        "Enable": true,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": {
+          "IsHidden": false,
+          "NickName": "Bottem intake",
+          "Name": "Fan #4",
+          "Identifier": "/lpc/nct6792d/fan/3"
+        },
+        "SelectedFanCurve": {
+          "Points": [
+            "40,45.4674074074074",
+            "45,49.9118518518518",
+            "60,49.9118518518518",
+            "65,55.2451851851852",
+            "70,59.6896296296296",
+            "75,75.022962962963",
+            "80,99.9118518518518"
+          ],
+          "SelectedIndex": 0,
+          "SelectedIndexValue": 45.4674074074074,
+          "SelectedIndexTemp": 40.0,
+          "SelectedTempSource": {
+            "Name": "Core Average",
+            "Identifier": "/intelcpu/0/temperature/10",
+            "IsHidden": false
+          },
+          "SelectedHysteresis": 2,
+          "SelectedResponseTime": 1,
+          "OneWayHysteresis": false,
+          "Name": "Graph"
+        },
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #4",
+        "NickName": "Bottem intake",
+        "Identifier": "/lpc/nct6792d/control/3",
+        "IsHidden": false
+      },
+      {
+        "Enable": true,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": {
+          "IsHidden": false,
+          "NickName": "Top 2 intake",
+          "Name": "Fan #5",
+          "Identifier": "/lpc/nct6792d/fan/4"
+        },
+        "SelectedFanCurve": {
+          "Points": [
+            "40,45.4674074074074",
+            "45,49.9118518518518",
+            "60,49.9118518518518",
+            "65,55.2451851851852",
+            "70,59.6896296296296",
+            "75,75.022962962963",
+            "80,99.9118518518518"
+          ],
+          "SelectedIndex": 0,
+          "SelectedIndexValue": 45.4674074074074,
+          "SelectedIndexTemp": 40.0,
+          "SelectedTempSource": {
+            "Name": "Core Average",
+            "Identifier": "/intelcpu/0/temperature/10",
+            "IsHidden": false
+          },
+          "SelectedHysteresis": 2,
+          "SelectedResponseTime": 1,
+          "OneWayHysteresis": false,
+          "Name": "Graph"
+        },
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #5",
+        "NickName": "Top 2 intake",
+        "Identifier": "/lpc/nct6792d/control/4",
+        "IsHidden": false
+      },
+      {
+        "Enable": false,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "MatchingFanSensor": null,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "SelectedCommandStepUp": 8.0,
+        "SelectedCommandStepDown": 8.0,
+        "CancelMatchFanCommand": null,
+        "Name": "Fan Control #6",
+        "NickName": "Fan Control #6",
+        "Identifier": "/lpc/nct6792d/control/5",
+        "IsHidden": true
+      }
+    ],
+    "FanSensors": [
+      {
+        "IsHidden": false,
+        "NickName": "GeForce RTX 2080 Ti",
+        "Name": "Fan 1 - NVIDIA GeForce RTX 2080 Ti",
+        "Identifier": "NVApiWrapper/256/fan/0"
+      },
+      {
+        "IsHidden": false,
+        "NickName": "GeForce RTX 2080 Ti",
+        "Name": "Fan 2 - NVIDIA GeForce RTX 2080 Ti",
+        "Identifier": "NVApiWrapper/256/fan/1"
+      },
+      {
+        "IsHidden": true,
+        "NickName": "Fan #1",
+        "Name": "Fan #1",
+        "Identifier": "/lpc/nct6792d/fan/0"
+      },
+      {
+        "IsHidden": false,
+        "NickName": "Pump",
+        "Name": "Fan #2",
+        "Identifier": "/lpc/nct6792d/fan/1"
+      },
+      {
+        "IsHidden": false,
+        "NickName": "Outtake",
+        "Name": "Fan #3",
+        "Identifier": "/lpc/nct6792d/fan/2"
+      },
+      {
+        "IsHidden": false,
+        "NickName": "Bottem intake",
+        "Name": "Fan #4",
+        "Identifier": "/lpc/nct6792d/fan/3"
+      },
+      {
+        "IsHidden": false,
+        "NickName": "Top 2 intake",
+        "Name": "Fan #5",
+        "Identifier": "/lpc/nct6792d/fan/4"
+      },
+      {
+        "IsHidden": true,
+        "NickName": "Fan #6",
+        "Name": "Fan #6",
+        "Identifier": "/lpc/nct6792d/fan/5"
+      }
+    ],
+    "CustomSensors": [],
+    "SelectedTrayIconSensor": {
+      "Name": "Core Average",
+      "Identifier": "/intelcpu/0/temperature/10",
+      "IsHidden": false
+    },
+    "SelectedTheme": "Dark",
+    "PrimaryColor": "#FF607D8B",
+    "SecondaryColor": "#FFAEEA00",
+    "SyncThemeWithWindows": false,
+    "HorizontalUIOrientation": false
+  },
+  "Sensors": {
+    "LibreHardwareMonitorSettings": {
+      "Motherboard": true,
+      "CPU": true,
+      "Memory": true,
+      "GPU": true,
+      "Storage": true,
+      "Controller": false,
+      "PSU": true
+    },
+    "NvAPIWrapperSettings": {
+      "Enabled": true
+    },
+    "DisabledPlugins": [],
+    "DisableStorageSensors": false
+  }
+}
