@@ -1,0 +1,14 @@
+robbyrussell/oh-my-zsh
+robbyrussell/oh-my-zsh path:plugins/colored-man-pages
+robbyrussell/oh-my-zsh path:plugins/git
+robbyrussell/oh-my-zsh path:plugins/command-not-found 
+robbyrussell/oh-my-zsh path:plugins/tmux
+robbyrussell/oh-my-zsh path:plugins/docker
+robbyrussell/oh-my-zsh path:plugins/docker-compose
+robbyrussell/oh-my-zsh path:plugins/emoji
+robbyrussell/oh-my-zsh path:plugins/vscode
+
+Aloxaf/fzf-tab
+zdharma/fast-syntax-highlighting
+zsh-users/zsh-autosuggestions
+denysdovhan/spaceship-prompt

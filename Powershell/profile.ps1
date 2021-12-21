@@ -1,7 +1,11 @@
 # Chocolatey
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
+If (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
+}
+$ParentProcess = (gwmi win32_process -Filter "processid='$((gwmi win32_process -Filter "processid='$pid'").Parentprocessid)'").Name
+If ( $ParentProcess -eq 'WindowsTerminal.exe' -or $ParentProcess -eq 'code.exe' -or $ParentProcess -eq 'ConEmuC64.exe') {
+    $LoadTheme = $True
 }
 # Modules
 $Modules = @( 
@@ -11,19 +15,24 @@ $Modules = @(
     "Get-ChildItemColor"
 )
 ForEach ($Module in $Modules) { 
-    if (Get-Module -Name $Module -ListAvailable) {
+    If (Get-Module -Name $Module -ListAvailable) {
         Import-Module $Module
-        If ($Module -eq 'oh-my-posh') {
-            Set-Theme Paradox
-        }
-        If ($Module -eq 'windows-screenfetch') {
-            Screenfetch
-        }     
+        If ($LoadTheme -eq $True) {
+            If ($Module -eq 'oh-my-posh') {
+                Set-Theme Paradox
+            }
+            If ($Module -eq 'windows-screenfetch') {
+                $OG = $ErrorActionPreference
+                $ErrorActionPreference = 'SilentlyContinue' 
+                Screenfetch
+                $ErrorActionPreference = $OG
+            }
+        }    
         If ($Module -eq 'Get-ChildItemColor') {
             Set-Alias ls Get-ChildItemColor -option AllScope
-        }   
+        }
     }
-    if (!(Get-Module $Module) ) {
+    If (!(Get-Module $Module) ) {
         Write-Warning "Missing $($Module) support, install $($Module) with 'Install-Module $($Module)'."
     }
 }
