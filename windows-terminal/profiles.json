@@ -1,4 +1,5 @@
 {
+    "$schema": "https://aka.ms/terminal-profiles-schema",
   "globals": {
     "alwaysShowTabs": true,
     "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
@@ -150,21 +151,44 @@
       "snapOnInput": true,
       "startingDirectory": "%USERPROFILE%",
       "useAcrylic": false
-    }
+    },
+        {
+            "guid": "{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}",
+            "hidden": false,
+            "name": "Ubuntu-18.04",
+            "source": "Windows.Terminal.Wsl"
+        },
+        {
+            "guid": "{46ca431a-3a87-5fb3-83cd-11ececc031d2}",
+            "hidden": false,
+            "name": "kali-linux",
+            "source": "Windows.Terminal.Wsl"
+        },
+        {
+            "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+            "hidden": false,
+            "name": "Azure Cloud Shell",
+            "source": "Windows.Terminal.Azure"
+        },
+        {
+            "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+            "name": "Ubuntu-20.04",
+            "source": "Windows.Terminal.Wsl"
+        }
   ],
   "schemes": [
     {
       "name": "BeardedThemeBlue",
       "background": "#0b0f19",
       "black": "#0b0f19",
-      "blue": "#4b9cd2",
+      "blue": "#c49137",
       "brightBlack": "#4b9cd2",
       "brightBlue": "#4b9cd2",
       "brightCyan": "#30a69c",
       "brightGreen": "#00FF6A",
       "brightPurple": "#c360d7",
       "brightRed": "#c24747",
-      "brightWhite": "#162c54",
+      "brightWhite": "#4b9cd2",
       "brightYellow": "#c49137",
       "cyan": "#30a69c",
       "foreground": "#ECE7FA",

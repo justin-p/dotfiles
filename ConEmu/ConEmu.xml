@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2019-07-07 15:54:47" build="180626">
+		<key name=".Vanilla" modified="2019-12-25 17:00:37" build="191012">
 			<value name="Language" type="string" data="en"/>
 			<value name="StartType" type="hex" data="02"/>
 			<value name="CmdLine" type="string" data=""/>
@@ -103,8 +103,8 @@
 			<value name="Multi.SplitWidth" type="hex" data="04"/>
 			<value name="Multi.SplitHeight" type="hex" data="04"/>
 			<value name="KeyboardHooks" type="hex" data="02"/>
-			<value name="FontName" type="string" data="Meslo LG M for Powerline"/>
-			<value name="FontName2" type="string" data="Meslo LG M for Powerline"/>
+			<value name="FontName" type="string" data="MesloLGM Nerd Font"/>
+			<value name="FontName2" type="string" data="Consolas"/>
 			<value name="FontAutoSize" type="hex" data="00"/>
 			<value name="FontSize" type="ulong" data="16"/>
 			<value name="FontSizeX" type="ulong" data="0"/>
@@ -136,8 +136,8 @@
 			<value name="IntegralSize" type="hex" data="00"/>
 			<value name="WindowMode" type="dword" data="00000520"/>
 			<value name="ConWnd X" type="long" data="0"/>
-			<value name="ConWnd Y" type="long" data="507"/>
-			<value name="LastMonitor" type="string" data="0,30,1920,1080"/>
+			<value name="ConWnd Y" type="long" data="514"/>
+			<value name="LastMonitor" type="string" data="0,30,3440,1440"/>
 			<value name="ConWnd Width" type="dword" data="00000077"/>
 			<value name="ConWnd Height" type="dword" data="0000001d"/>
 			<value name="16bit Height" type="ulong" data="0"/>
@@ -684,6 +684,10 @@
 					<value name="ColorTable15" type="dword" data="00f4efec"/>
 				</key>
 			</key>
+			<value name="AnsiLogCodes" type="hex" data="00"/>
+			<value name="AutoReloadEnvironment" type="hex" data="01"/>
+			<value name="AutoTrimSingleLine" type="hex" data="00"/>
+			<value name="StatusBar.Hide.InputGrouping" type="hex" data="00"/>
 		</key>
 	</key>
 </key>

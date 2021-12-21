@@ -12,6 +12,7 @@
     ui = true
 	editor = code -n -w # VS Code	
 	excludesfile = ~/.gitignore_global
+	longpaths = true
 	
 [color]
 	ui = true	
