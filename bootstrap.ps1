@@ -65,8 +65,6 @@ if (-not $env:HOME) {
 $DotFilesPath = Split-Path $MyInvocation.MyCommand.Path
 Push-Location $DotFilesPath
 try {
-    Move-Item "C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml"   -Destination "C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml.bak"
-    StowFile $("C:\tools\Cmder\vendor\conemu-maximus5\ConEmu.xml") (Get-Item "ConEmu\ConEmu.xml").FullName
     Try {
         StowFile $(Join-Path $($($profile.Split('\')[0..$($profile.Split('\').count-2)]) -join('\')) "Microsoft.VSCode_profile.ps1") (Get-Item "Powershell\profile.ps1").FullName
     } Catch {
@@ -90,7 +88,6 @@ try {
     StowFile $env:HOME/.gitignore (Get-Item "git\.gitignore").FullName	   
     git config --global core.excludesfile ~/.gitignore_global	
     StowFile "$env:HOME\_vimrc" (Get-Item "vim\.vimrc").FullName
-    reg import "clipboardfusion\ClipboardFusion.reg"
 }
 finally {
     Pop-Location
