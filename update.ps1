@@ -12,10 +12,10 @@ if (Test-Path ~/.gitlist) {
 $DotFilesPath = Split-Path $MyInvocation.MyCommand.Path
 pushd $DotFilesPath
 try {
-    # Dotfiles
+    # dotfiles
     git pull --ff-only
     # Chocolatey
-    # Exclude mobaxterm so it does not overwrite license  ¯\_(ツ)_/¯
+    # Exclude mobaxterm so it does not overwrite license ¯\_(ツ)_/¯
     cup all -y --except mobaxterm
 }
 finally {
