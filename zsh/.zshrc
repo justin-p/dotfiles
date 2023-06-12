@@ -1,6 +1,9 @@
-source <(antibody init)
-ZSH="$(antibody home)/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh"
-antibody bundle < ~/.zsh_plugins
+[[ -e ${ZDOTDIR:-~}/.antidote ]] ||
+  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidot
+  
+source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+source <(antidote init)
+antidote bundle < ~/.zsh_plugins
 
 # aliasses
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
@@ -32,4 +35,4 @@ SPACESHIP_TIME_SHOW=true
 SPACESHIP_TIME_COLOR="blue"
 
 # extend path
-export PATH=~/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+export PATH=~/.local/bin:/snap/bin:$PATH
