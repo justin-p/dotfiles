@@ -1,5 +1,5 @@
 [[ -e ${ZDOTDIR:-~}/.antidote ]] ||
-  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidot
+  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
   
 source ${ZDOTDIR:-~}/.antidote/antidote.zsh
 source <(antidote init)
