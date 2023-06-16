@@ -12,4 +12,5 @@ Aloxaf/fzf-tab
 zdharma/fast-syntax-highlighting
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-completions
+MichaelAquilina/zsh-autoswitch-virtualenv
 denysdovhan/spaceship-prompt
