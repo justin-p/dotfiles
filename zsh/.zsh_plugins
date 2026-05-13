@@ -1,16 +1,36 @@
-robbyrussell/oh-my-zsh
-robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-robbyrussell/oh-my-zsh path:plugins/git
-robbyrussell/oh-my-zsh path:plugins/command-not-found 
-robbyrussell/oh-my-zsh path:plugins/tmux
-robbyrussell/oh-my-zsh path:plugins/docker
-robbyrussell/oh-my-zsh path:plugins/docker-compose
-robbyrussell/oh-my-zsh path:plugins/emoji
-robbyrussell/oh-my-zsh path:plugins/vscode
 
+# If you use Oh-My-Zsh with antidote, load this plugin FIRST to set things up so you
+# don't have to worry about whether OMZ will work correctly.
+# https://github.com/getantidote/antidote-use-omz
+getantidote/use-omz
+
+# Plugins from ohmyzsh/ohmyzsh:
+# https://github.com/ohmyzsh/ohmyzsh (see plugin subpaths)
+ohmyzsh/ohmyzsh path:plugins/colored-man-pages   # Adds color to man pages for easier reading
+ohmyzsh/ohmyzsh path:plugins/git                 # Provides many useful git aliases & completions
+ohmyzsh/ohmyzsh path:plugins/command-not-found   # Suggests package to install when command is missing
+ohmyzsh/ohmyzsh path:plugins/tmux                # Adds tmux integration & aliases
+ohmyzsh/ohmyzsh path:plugins/docker              # Helpful docker aliases & completions
+ohmyzsh/ohmyzsh path:plugins/docker-compose      # Adds docker-compose CLI aliases
+ohmyzsh/ohmyzsh path:plugins/vscode              # Shortcuts and helpers for Visual Studio Code
+
+# https://github.com/Aloxaf/fzf-tab - Adds fuzzy matching to tab completion using fzf
 Aloxaf/fzf-tab
+
+# https://github.com/zdharma/fast-syntax-highlighting - Highlights shell syntax as you type
 zdharma/fast-syntax-highlighting
+
+# https://github.com/zsh-users/zsh-autosuggestions - Suggests commands based on your history as you type
 zsh-users/zsh-autosuggestions
+
+# https://github.com/zsh-users/zsh-completions - Adds many extra command completions for zsh
 zsh-users/zsh-completions
+
+# https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv - Automatically activates Python virtualenvs when you cd into a directory
 MichaelAquilina/zsh-autoswitch-virtualenv
-denysdovhan/spaceship-prompt
+
+# https://github.com/leonjza/history-here - Saves shell history per-directory, so your command recall is contextual to where you're working
+leonjza/history-here
+
+# Spaceship prompt
+spaceship-prompt/spaceship-prompt

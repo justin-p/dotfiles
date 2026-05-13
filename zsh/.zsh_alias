@@ -1,5 +1,55 @@
-# LSDeluxe
-alias ls='lsd'
 
 # Invoke-Item
 alias ii='xdg-open'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# better-commits git wrapper (disabled under Cursor agent shells)
+git() {
+  if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+    command git "$@"
+    return
+  fi
+
+  if ! command -v better-commits &>/dev/null; then
+    echo "better-commits is not installed. Installing now..."
+    npm install -g better-commits
+  fi
+
+  if [[ "$1" == "commit" || "$1" == "add" ]]; then
+    better-commits
+  else
+    command git "$@"
+  fi
+}
+
+# zoxide: remap cd -> z (disabled under Cursor agent shells)
+cd() {
+  if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+    builtin cd "$@"
+    return
+  fi
+
+  if (( ${+functions[z]} )); then
+    z "$@"
+  else
+    builtin cd "$@"
+  fi
+}
+
+# fnm
+FNM_PATH="/home/justin-p/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/justin-p/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
