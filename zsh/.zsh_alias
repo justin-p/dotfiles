@@ -21,9 +21,11 @@ git() {
     return
   fi
 
-  if ! command -v better-commits &>/dev/null; then
-    echo "better-commits is not installed. Installing now..."
-    npm install -g better-commits
+  if command -v npm &>/dev/null; then
+    if ! command -v better-commits &>/dev/null; then
+      echo "better-commits is not installed. Installing now..."
+      npm install -g better-commits
+    fi
   fi
 
   if [[ "$1" == "commit" || "$1" == "add" ]]; then

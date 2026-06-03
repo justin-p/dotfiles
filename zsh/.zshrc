@@ -41,6 +41,12 @@ antidote bundle < ~/.zsh_plugins
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
 
 # Check if fzf is not installed in $HOME/.fzf; if not, clone and install it with bindings and completion
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
+
+# Check if fzf is not installed in $HOME/.fzf; if not, clone and install it with bindings and completion
 if [[ ! -d "$HOME/.fzf" ]]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
   "$HOME/.fzf/install" --key-bindings --completion --no-update-rc
@@ -100,6 +106,11 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="/home/justin-p/.local/share/fnm:$PATH" # Add fnm binaries to PATH
   eval "`fnm env`"  # Set up FNM environment variables and function wrappers
 fi
+
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Bun: Add Bun JavaScript runtime binary to PATH
 export BUN_INSTALL="$HOME/.bun"
