@@ -40,7 +40,7 @@ antidote bundle < ~/.zsh_plugins
 # Source a file containing custom aliases if it exists (~/.zsh_alias)
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
 
-# Check if fzf is not installed in $HOME/.fzf; if not, clone and install it with bindings and completion
+# Check if tmux tpm is installed, if not clone and install
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
   git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
