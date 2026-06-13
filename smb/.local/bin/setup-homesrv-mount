@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ENV_FILE="${HOME}/.config/smb/homesrv.env"
+ENV_EXAMPLE="${HOME}/.config/smb/homesrv.env.example"
+CREDS="${HOME}/.config/smb/credentials"
+CREDS_EXAMPLE="${HOME}/.config/smb/credentials.example"
+
+mkdir -p "${HOME}/.config/smb"
+
+created=false
+for entry in "${ENV_FILE}|${ENV_EXAMPLE}" "${CREDS}|${CREDS_EXAMPLE}"; do
+  IFS='|' read -r file example <<< "${entry}"
+  [[ -f "${file}" ]] && continue
+  if [[ ! -f "${example}" ]]; then
+    echo "Missing ${file} (no example at ${example})."
+    exit 1
+  fi
+  cp "${example}" "${file}"
+  chmod 600 "${file}"
+  echo "Created ${file} from example."
+  created=true
+done
+
+if [[ "${created}" == true ]]; then
+  echo "Edit homesrv.env (server/share/user) and credentials (username/password), then re-run."
+  exit 1
+fi
+
+if ! grep -q '^password=.\+' "${CREDS}" 2>/dev/null; then
+  echo "No password in ${CREDS}. Edit that file, then re-run."
+  exit 1
+fi
+
+chmod 600 "${CREDS}"
+
+# shellcheck source=/dev/null
+source "${ENV_FILE}"
+
+: "${SMB_SERVER:?SMB_SERVER not set in ${ENV_FILE}}"
+: "${SMB_SHARE:?SMB_SHARE not set in ${ENV_FILE}}"
+: "${SMB_USER:?SMB_USER not set in ${ENV_FILE}}"
+MOUNT_POINT="${MOUNT_POINT:-${HOME}/homesrv}"
+MOUNT_POINT="${MOUNT_POINT//\$\{HOME\}/${HOME}}"
+MOUNT_POINT="${MOUNT_POINT/#\~/${HOME}}"
+
+UNIT="$(systemd-escape --path "${MOUNT_POINT}")"
+FSTAB_LINE="//${SMB_SERVER}/${SMB_SHARE} ${MOUNT_POINT} cifs credentials=${CREDS},uid=$(id -u),gid=$(id -g),file_mode=0755,dir_mode=0755,iocharset=utf8,vers=3.0,sec=ntlmssp,x-systemd.automount,nofail,_netdev 0 0"
+
+mkdir -p "${MOUNT_POINT}"
+
+echo "Installing cifs-utils and keyutils (sudo required)..."
+sudo apt-get update
+sudo apt-get install -y cifs-utils keyutils smbclient
+
+if grep -qF "${MOUNT_POINT}" /etc/fstab 2>/dev/null; then
+  sudo sed -i "\|${MOUNT_POINT}|d" /etc/fstab
+fi
+echo "${FSTAB_LINE}" | sudo tee -a /etc/fstab >/dev/null
+echo "Updated fstab entry for ${MOUNT_POINT}."
+
+sudo systemctl reset-failed "${UNIT}.automount" "${UNIT}.mount" 2>/dev/null || true
+sudo systemctl daemon-reload
+sudo systemctl start "${UNIT}.automount"
+
+echo "Testing mount (triggers on first access)..."
+if ls "${MOUNT_POINT}" >/dev/null 2>&1; then
+  echo "OK: ${MOUNT_POINT} is mounted."
+  mount | grep "${MOUNT_POINT}"
+else
+  echo "Mount did not come up. Check:"
+  echo "  systemctl status '${UNIT}.automount'"
+  echo "  journalctl -u '${UNIT}.mount' -n 20"
+  echo
+  echo "If you still see 'Permission denied', verify SMB login with:"
+  echo "  smbclient -L //${SMB_SERVER} -U '${SMB_USER}'"
+fi
