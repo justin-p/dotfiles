@@ -14,3 +14,7 @@ Thumbs.db
 # General
 log/
 *.log
+
+# SMB automount (local secrets)
+.config/smb/*.env
+.config/smb/*.credentials

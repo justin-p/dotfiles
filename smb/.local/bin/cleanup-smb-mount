@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# shellcheck source=smb-mount-lib.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/smb-mount-lib.sh"
+
+names=()
+while IFS= read -r name; do
+  [[ -n "${name}" ]] || continue
+  names+=("${name}")
+done < <(smb_list_profile_names_from_examples)
+
+if [[ ${#names[@]} -eq 0 ]]; then
+  echo "No profile examples found in ${SMB_CONFIG_DIR}."
+  exit 1
+fi
+
+for name in "${names[@]}"; do
+  env_file="${SMB_CONFIG_DIR}/${name}.env"
+  if [[ -f "${env_file}" ]]; then
+    smb_load_profile "${name}"
+  else
+    # Best-effort: use defaults from example mount point naming
+    PROFILE_MOUNT_POINT="${HOME}/${name}"
+    if [[ -f "${SMB_CONFIG_DIR}/${name}.env.example" ]]; then
+      # shellcheck source=/dev/null
+      source "${SMB_CONFIG_DIR}/${name}.env.example"
+      PROFILE_MOUNT_POINT="$(smb_expand_mount_point "${MOUNT_POINT:-${HOME}/${name}}")"
+    fi
+    PROFILE_UNIT="$(systemd-escape --path "${PROFILE_MOUNT_POINT}")"
+  fi
+
+  echo "Removing SMB automount for ${PROFILE_MOUNT_POINT} (${name})..."
+  smb_stop_and_unmount "${PROFILE_MOUNT_POINT}" "${PROFILE_UNIT}"
+  smb_remove_fstab_entry "${PROFILE_MOUNT_POINT}"
+done
+
+sudo systemctl daemon-reload
+
+shopt -s nullglob
+rm -f "${SMB_CONFIG_DIR}"/*.env "${SMB_CONFIG_DIR}"/credentials "${SMB_CONFIG_DIR}"/*.credentials
+shopt -u nullglob
+
+echo "Removed local profile env and credentials under ${SMB_CONFIG_DIR} (kept *.example from stow)."
+echo "Re-setup: edit examples/copies under ${SMB_CONFIG_DIR}, then run setup-smb-mount."

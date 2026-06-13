@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# shellcheck source=smb-mount-lib.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/smb-mount-lib.sh"
+
+smb_ensure_profile_files
+
+profiles=()
+while IFS= read -r name; do
+  [[ -n "${name}" ]] || continue
+  profiles+=("${name}")
+done < <(smb_list_profiles)
+
+if [[ ${#profiles[@]} -eq 0 ]]; then
+  echo "No profiles found in ${SMB_CONFIG_DIR} (*.env)."
+  echo "Copy *.env.example and *.credentials.example from stow, edit, then re-run."
+  exit 1
+fi
+
+declare -A fstab_lines=()
+
+for name in "${profiles[@]}"; do
+  smb_load_profile "${name}"
+  smb_validate_credentials "${PROFILE_CREDS}"
+  mkdir -p "${PROFILE_MOUNT_POINT}"
+  fstab_lines["${PROFILE_MOUNT_POINT}"]="$(smb_fstab_line "${SMB_SERVER}" "${SMB_SHARE}" "${PROFILE_MOUNT_POINT}" "${PROFILE_CREDS}" "${SMB_MOUNT_OPTIONS:-}")"
+done
+
+echo "Installing cifs-utils and keyutils (sudo required)..."
+sudo apt-get update
+sudo apt-get install -y cifs-utils keyutils smbclient
+
+for mount_point in "${!fstab_lines[@]}"; do
+  smb_remove_fstab_entry "${mount_point}"
+  echo "${fstab_lines[${mount_point}]}" | sudo tee -a /etc/fstab >/dev/null
+  echo "Updated fstab entry for ${mount_point}."
+done
+
+sudo systemctl daemon-reload
+
+failed=0
+for name in "${profiles[@]}"; do
+  smb_load_profile "${name}"
+  sudo systemctl reset-failed "${PROFILE_UNIT}.automount" "${PROFILE_UNIT}.mount" 2>/dev/null || true
+  sudo systemctl start "${PROFILE_UNIT}.automount"
+
+  echo "Testing ${name} at ${PROFILE_MOUNT_POINT}..."
+  if ls "${PROFILE_MOUNT_POINT}" >/dev/null 2>&1; then
+    echo "OK: ${PROFILE_MOUNT_POINT} is mounted."
+    mount | grep "${PROFILE_MOUNT_POINT}" || true
+  else
+    echo "FAILED: ${PROFILE_MOUNT_POINT} did not mount."
+    echo "  systemctl status \"\$(systemd-escape --path '${PROFILE_MOUNT_POINT}').automount\""
+    echo "  journalctl -u \"\$(systemd-escape --path '${PROFILE_MOUNT_POINT}').mount\" -n 20"
+    failed=1
+  fi
+done
+
+if [[ ${failed} -ne 0 ]]; then
+  echo
+  echo "Some mounts failed."
+  echo "If smbclient works but mount.cifs returns error 13, try SMB_MOUNT_OPTIONS in the profile .env,"
+  echo "e.g. vers=3.1.1,seal when the share requires SMB3 encryption."
+  echo "Verify SMB login, e.g.:"
+  for name in "${profiles[@]}"; do
+    smb_load_profile "${name}"
+    echo "  smbclient //${SMB_SERVER}/${SMB_SHARE} -A '${PROFILE_CREDS}' -c 'ls'"
+  done
+  exit 1
+fi

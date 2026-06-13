@@ -2,9 +2,8 @@ BurpSuite/.BurpSuite/*
 !BurpSuite/.BurpSuite/UserConfigPro.json
 !BurpSuite/.BurpSuite/jython-standalone-2.7.2.jar
 
-# SMB homeshare
-smb/.config/smb/homesrv.env
-smb/.config/smb/credentials
-**/*.credentials
-!**/*.credentials.example
-!**/credentials.example
+# SMB automount (local secrets; stow-compatible paths)
+smb/.config/smb/*.env
+smb/.config/smb/*.credentials
+!smb/.config/smb/*.env.example
+!smb/.config/smb/*.credentials.example
