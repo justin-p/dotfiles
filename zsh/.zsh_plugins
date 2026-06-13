@@ -26,6 +26,9 @@ zsh-users/zsh-autosuggestions
 # https://github.com/zsh-users/zsh-completions - Adds many extra command completions for zsh
 zsh-users/zsh-completions
 
+# https://github.com/sunlei/zsh-ssh - Better host completion for ssh in Zsh. 
+sunlei/zsh-ssh
+
 # https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv - Automatically activates Python virtualenvs when you cd into a directory
 MichaelAquilina/zsh-autoswitch-virtualenv
 

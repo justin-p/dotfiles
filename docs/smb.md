@@ -1,12 +1,12 @@
 # SMB automount (multi-share)
 
-Automount TrueNAS (or other) SMB shares via fstab + systemd automount. Each share is a **profile** with its own env + credentials files.
+Automount SMB shares via fstab + systemd automount. Each share is a profile with its own env + credentials files.
 
 ## Install (stow)
 
 ```bash
 cd ~/.dotfiles
-stow --ignore=README.md smb
+stow smb
 ```
 
 ## First-time setup
@@ -61,15 +61,15 @@ Unmounts all profiles, removes fstab entries, deletes local `*.env` and `*.crede
 
 ## Troubleshooting
 
-**smbclient works, `mount error(13)` on mount:** userspace smbclient negotiates SMB3 encryption automatically; kernel `mount.cifs` does not unless you ask. Add to the profile `.env`:
+smbclient works, `mount error(13)` on mount: userspace smbclient negotiates SMB3 encryption automatically; kernel `mount.cifs` does not unless you ask. Add to the profile `.env`:
 
 ```bash
 SMB_MOUNT_OPTIONS=vers=3.1.1,seal
 ```
 
-Then re-run `setup-smb-mount`. On TrueNAS, check whether the NAS share has SMB encryption enabled (Sharing → SMB → share → Advanced).
+Then re-run `setup-smb-mount`. check whether the NAS share has SMB encryption enabled (Sharing → SMB → share → Advanced).
 
-**Can read but not edit/save files (especially in Desktop/Documents):** Windows home folders often arrive with read-only directory permissions (`555`). Editors save via a temp file + rename, which needs directory write access. Mounts use `noperm` so Linux ignores those server ACLs; re-run `setup-smb-mount` after updating scripts.
+Can read but not edit/save files (especially in Desktop/Documents): Windows home folders often arrive with read-only directory permissions (`555`). Editors save via a temp file + rename, which needs directory write access. Mounts use `noperm` so Linux ignores those server ACLs; re-run `setup-smb-mount` after updating scripts.
 
 Systemd unit names come from the mount path:
 
@@ -82,6 +82,6 @@ mountpoint ~/homesrv ~/nas
 ## Add a share later
 
 1. Add `{name}.env.example` and `{name}.credentials.example` to dotfiles
-2. `stow -R --ignore=README.md smb`
+2. `stow -R smb`
 3. Copy/edit local `{name}.env` and `{name}.credentials`
 4. `setup-smb-mount`

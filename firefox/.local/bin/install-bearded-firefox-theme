@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+EXT_ID="bearded-gold-d-raynh@dotfiles.local"
+THEME_SRC="${XDG_DATA_HOME:-$HOME/.local/share}/firefox-theme/bearded-gold-d-raynh"
+LINK_NAME="${EXT_ID}"
+MARKER_START="// >>> bearded-gold-d-raynh theme >>>"
+MARKER_END="// <<< bearded-gold-d-raynh theme <<<"
+
+if [[ ! -f "${THEME_SRC}/manifest.json" ]]; then
+  echo "Theme not found at ${THEME_SRC}" >&2
+  echo "Run: stow firefox  (from ~/.dotfiles)" >&2
+  exit 1
+fi
+
+declare -a profiles=()
+declare -a bases=(
+  "${XDG_CONFIG_HOME:-${HOME}/.config}/mozilla/firefox"
+  "${HOME}/.mozilla/firefox"
+  "${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox"
+  "${HOME}/snap/firefox/common/.mozilla/firefox"
+)
+
+for base in "${bases[@]}"; do
+  [[ -f "${base}/profiles.ini" ]] || continue
+  while IFS= read -r profile; do
+    profiles+=("${profile}")
+  done < <(
+    awk -v base="${base}" '
+      /^\[Profile/ { in_profile=1; is_relative=1; path="" }
+      in_profile && /^IsRelative=/ { is_relative=$0; sub(/^IsRelative=/, "", is_relative) }
+      in_profile && /^Path=/ {
+        path=$0; sub(/^Path=/, "", path)
+        if (is_relative == 1) print base "/" path
+        else print path
+        in_profile=0
+      }
+    ' "${base}/profiles.ini"
+  )
+done
+
+if ((${#profiles[@]} == 0)); then
+  echo "No Firefox profiles found." >&2
+  echo "Install Firefox, create a profile, then re-run this script." >&2
+  exit 1
+fi
+
+patch_user_js() {
+  local profile="$1"
+  local user_js="${profile}/user.js"
+  local tmp
+  tmp="$(mktemp)"
+
+  if [[ -f "${user_js}" ]]; then
+    awk -v start="${MARKER_START}" -v end="${MARKER_END}" '
+      $0 == start { skip=1; next }
+      $0 == end { skip=0; next }
+      !skip { print }
+    ' "${user_js}" > "${tmp}"
+    mv "${tmp}" "${user_js}"
+  fi
+
+  {
+    echo "${MARKER_START}"
+    echo "user_pref(\"extensions.activeThemeID\", \"${EXT_ID}\");"
+    echo "user_pref(\"toolkit.legacyUserProfileCustomizations.stylesheets\", true);"
+    echo "${MARKER_END}"
+  } >> "${user_js}"
+}
+
+installed=0
+for profile in "${profiles[@]}"; do
+  [[ -d "${profile}" ]] || continue
+
+  ext_dir="${profile}/extensions"
+  chrome_dir="${profile}/chrome"
+  target="${ext_dir}/${LINK_NAME}"
+
+  mkdir -p "${ext_dir}" "${chrome_dir}"
+  ln -sfn "${THEME_SRC}" "${target}"
+  ln -sfn "${THEME_SRC}/userChrome.css" "${chrome_dir}/userChrome.css"
+  ln -sfn "${THEME_SRC}/userContent.css" "${chrome_dir}/userContent.css"
+  patch_user_js "${profile}"
+
+  echo "Configured ${profile}"
+  installed=$((installed + 1))
+done
+
+if ((installed == 0)); then
+  echo "Profiles listed in profiles.ini were missing on disk." >&2
+  exit 1
+fi
+
+echo "Done. Restart Firefox to apply the Bearded Gold D Raynh theme."

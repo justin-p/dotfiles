@@ -1,0 +1,82 @@
+/* Bearded Theme feat. Gold D Raynh — browser chrome */
+
+:root {
+  --toolbar-bgcolor: #0e1424 !important;
+  --lwt-accent-color: #0c1220 !important;
+  --lwt-text-color: #b8c4e4 !important;
+  --arrowpanel-background: #16203b !important;
+  --arrowpanel-color: #b8c4e4 !important;
+  --arrowpanel-border-color: #070a12 !important;
+  --arrowpanel-hover-background: #1d2a4d !important;
+  --arrowpanel-selected-background: #243460 !important;
+  --arrowpanel-selected-color: #b8c4e4 !important;
+  --tab-selected-bgcolor: #0f1628 !important;
+  --lwt-selected-tab-background-color: #0f1628 !important;
+}
+
+#navigator-toolbox {
+  border-bottom-color: #070a12 !important;
+}
+
+#TabsToolbar {
+  background-color: #0c1220 !important;
+}
+
+#nav-bar {
+  background-color: #0e1424 !important;
+}
+
+#PersonalToolbar {
+  background-color: #0c1220 !important;
+  color: #93a6d6 !important;
+  border-bottom-color: #070a12 !important;
+}
+
+#sidebar-box {
+  background-color: #0c1220 !important;
+  color: #93a6d6 !important;
+  border-left-color: #070a12 !important;
+}
+
+#sidebar-header {
+  background-color: #0c1220 !important;
+  color: #b8c4e4 !important;
+  border-bottom-color: #070a12 !important;
+}
+
+.urlbar-background {
+  background-color: #121b31 !important;
+  border-color: #27365c !important;
+}
+
+#urlbar[focused] > .urlbar-input-container > .urlbar-background {
+  border-color: #e39000 !important;
+}
+
+toolbarbutton:hover {
+  background-color: #16203b !important;
+}
+
+toolbarbutton:active {
+  background-color: #1d2a4d !important;
+}
+
+.tab-background[selected="true"] {
+  background-color: #0f1628 !important;
+}
+
+.tab-background:not([selected="true"]) {
+  background-color: #0c1220 !important;
+}
+
+.tabbrowser-tab[selected="true"] .tab-text {
+  color: #b8c4e4 !important;
+}
+
+.tabbrowser-tab:not([selected="true"]) .tab-text {
+  color: #334984 !important;
+}
+
+.tab-line {
+  background-color: #e39000 !important;
+}

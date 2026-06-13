@@ -1,0 +1,60 @@
+{
+  "manifest_version": 2,
+  "name": "Bearded Theme feat. Gold D Raynh",
+  "version": "1.1.0",
+  "description": "Firefox theme matching Bearded Theme feat. Gold D Raynh (VS Code / Cursor).",
+  "author": "Justin",
+  "applications": {
+    "gecko": {
+      "id": "bearded-gold-d-raynh@dotfiles.local",
+      "strict_min_version": "102.0"
+    }
+  },
+  "theme": {
+    "colors": {
+      "frame": "#0c1220",
+      "frame_inactive": "#080c15",
+      "toolbar": "#0e1424",
+      "toolbar_text": "#b8c4e4",
+      "toolbar_field": "#121b31",
+      "toolbar_field_text": "#b8c4e4",
+      "toolbar_field_text_focus": "#b8c4e4",
+      "toolbar_field_focus": "#16203b",
+      "toolbar_field_border": "#27365c",
+      "toolbar_field_border_focus": "#e39000",
+      "toolbar_field_highlight": "#395397",
+      "toolbar_field_highlight_text": "#b8c4e4",
+      "toolbar_field_separator": "#334984",
+      "toolbar_top_separator": "#070a12",
+      "toolbar_bottom_separator": "#070a12",
+      "toolbar_vertical_separator": "#334984",
+      "tab_text": "#b8c4e4",
+      "tab_background_text": "#334984",
+      "tab_line": "#e39000",
+      "tab_loading": "#ffd000",
+      "tab_selected": "#0f1628",
+      "tab_background_separator": "#070a12",
+      "icons": "#93a6d6",
+      "icons_attention": "#e39000",
+      "button_background_hover": "#16203b",
+      "button_background_active": "#1d2a4d",
+      "popup": "#16203b",
+      "popup_text": "#b8c4e4",
+      "popup_border": "#070a12",
+      "popup_highlight": "#243460",
+      "popup_highlight_text": "#b8c4e4",
+      "sidebar": "#0c1220",
+      "sidebar_text": "#93a6d6",
+      "sidebar_border": "#070a12",
+      "sidebar_highlight": "#243460",
+      "sidebar_highlight_text": "#b8c4e4",
+      "ntp_background": "#0e1424",
+      "ntp_text": "#b8c4e4",
+      "ntp_card_background": "#16203b",
+      "bookmark_text": "#93a6d6"
+    },
+    "properties": {
+      "color_scheme": "dark"
+    }
+  }
+}

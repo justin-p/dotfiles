@@ -1,0 +1,47 @@
+/* Bearded Theme feat. Gold D Raynh — new tab / home */
+
+@-moz-document url("about:home"), url("about:newtab"), url("about:privatebrowsing") {
+  body {
+    --newtab-background-color: #0e1424 !important;
+    --newtab-background-color-secondary: #0c1220 !important;
+    --newtab-text-primary-color: #b8c4e4 !important;
+    --newtab-text-secondary-color: #93a6d6 !important;
+    --newtab-card-background-color: #16203b !important;
+    --newtab-background-card: #16203b !important;
+    --newtab-element-hover-color: #1d2a4d !important;
+    --newtab-element-active-color: #243460 !important;
+    --newtab-border-color: #070a12 !important;
+    --newtab-textbox-background-color: #121b31 !important;
+    --newtab-textbox-text-color: #b8c4e4 !important;
+    --newtab-topsites-background-color: #16203b !important;
+    --newtab-topsites-title-color: #b8c4e4 !important;
+    --newtab-primary-action-background: #e39000 !important;
+    background-color: #0e1424 !important;
+    color: #b8c4e4 !important;
+  }
+
+  .outer-wrapper,
+  .search-wrapper,
+  .search-inner-wrapper {
+    background-color: transparent !important;
+  }
+
+  .search-handoff-button,
+  .search-wrapper input {
+    background-color: #121b31 !important;
+    color: #b8c4e4 !important;
+    border-color: #27365c !important;
+  }
+
+  .top-site-outer,
+  .card-outer,
+  .wrapper {
+    background-color: #16203b !important;
+    border-color: #070a12 !important;
+  }
+
+  .top-site-icon-outer,
+  .icon-wrapper {
+    background-color: #1a2137 !important;
+  }
+}
