@@ -69,8 +69,8 @@ if ls "${MOUNT_POINT}" >/dev/null 2>&1; then
   mount | grep "${MOUNT_POINT}"
 else
   echo "Mount did not come up. Check:"
-  echo "  systemctl status '${UNIT}.automount'"
-  echo "  journalctl -u '${UNIT}.mount' -n 20"
+  echo "  systemctl status \"\$(systemd-escape --path '${MOUNT_POINT}').automount\""
+  echo "  journalctl -u \"\$(systemd-escape --path '${MOUNT_POINT}').mount\" -n 20"
   echo
   echo "If you still see 'Permission denied', verify SMB login with:"
   echo "  smbclient -L //${SMB_SERVER} -U '${SMB_USER}'"

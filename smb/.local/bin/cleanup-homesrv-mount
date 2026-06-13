@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MOUNT_POINT="${1:-${HOME}/homesrv}"
+resolve_mount_point() {
+  local env_file="${HOME}/.config/smb/homesrv.env"
+  local mount_point="${HOME}/homesrv"
+
+  if [[ -f "${env_file}" ]]; then
+    # shellcheck source=/dev/null
+    source "${env_file}"
+    mount_point="${MOUNT_POINT:-${HOME}/homesrv}"
+    mount_point="${mount_point//\$\{HOME\}/${HOME}}"
+    mount_point="${mount_point/#\~/${HOME}}"
+  fi
+
+  printf '%s' "${mount_point}"
+}
+
+MOUNT_POINT="$(resolve_mount_point)"
 UNIT="$(systemd-escape --path "${MOUNT_POINT}")"
 
 echo "Removing SMB automount for ${MOUNT_POINT}..."

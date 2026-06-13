@@ -43,10 +43,12 @@ smbclient -L //YOUR_SERVER -U 'YOUR_USER'
 
 ## Troubleshooting
 
+Systemd unit names are derived from your mount path (use `systemd-escape`, not hand-typed `\x2d`):
+
 ```bash
-systemctl status 'home-justin\x2dp-homesrv.automount'
-journalctl -u 'home-justin\x2dp-homesrv.mount' -n 20
+systemctl status "$(systemd-escape --path ~/homesrv).automount"
+journalctl -u "$(systemd-escape --path ~/homesrv).mount" -n 20
 mountpoint ~/homesrv
 ```
 
-Use quotes around the unit name — the shell eats the backslash otherwise.
+If `MOUNT_POINT` in `homesrv.env` is not `~/homesrv`, substitute that path in `systemd-escape --path`.
