@@ -11,3 +11,4 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 | Splash / greeter | [docs/boot-theme.md](docs/boot-theme.md) |
 | Firefox theme | [docs/firefox.md](docs/firefox.md) |
 | SMB automount | [docs/smb.md](docs/smb.md) |
+| SSH sync (homesrv) | [docs/ssh-sync.md](ssh-sync/docs/ssh-sync.md) |

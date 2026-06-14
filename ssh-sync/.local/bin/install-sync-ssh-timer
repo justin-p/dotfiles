@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+systemctl --user daemon-reload
+systemctl --user enable --now sync-ssh.timer
+systemctl --user status sync-ssh.timer --no-pager
