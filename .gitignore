@@ -7,3 +7,6 @@ smb/.config/smb/*.env
 smb/.config/smb/*.credentials
 !smb/.config/smb/*.env.example
 !smb/.config/smb/*.credentials.example
+
+# Python bytecode
+__pycache__/

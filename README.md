@@ -8,5 +8,6 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 |---------|-----|
 | COSMIC Terminal | [docs/cosmic-term.md](docs/cosmic-term.md) |
 | COSMIC desktop theme | [docs/cosmic-theme.md](docs/cosmic-theme.md) |
+| Splash / greeter | [docs/boot-theme.md](docs/boot-theme.md) |
 | Firefox theme | [docs/firefox.md](docs/firefox.md) |
 | SMB automount | [docs/smb.md](docs/smb.md) |

@@ -58,6 +58,10 @@ cosmic-theme/
   bearded-gold-d-raynh-bg.png
 ```
 
+## Boot splash and login screen
+
+Plymouth boot splash and COSMIC greeter can match this theme. See [boot-theme.md](boot-theme.md).
+
 ## Troubleshooting
 
 **Theme unchanged after script** — import the `.ron` via Settings, or toggle dark mode off/on.
