@@ -45,7 +45,6 @@ if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
   git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
 
-
 # Check if fzf is not installed in $HOME/.fzf; if not, clone and install it with bindings and completion
 if [[ ! -d "$HOME/.fzf" ]]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
@@ -53,7 +52,7 @@ if [[ ! -d "$HOME/.fzf" ]]; then
 fi
 
 # fzf prompt/info layout: shared by vanilla fzf (Ctrl+R, ** …) and fzf-tab (use-fzf-default-opts).
-# NOTE: FZF_DEFAULT_OPTS is split on spaces — no spaces inside one flag (e.g. --info=inline:… must be one word).
+# NOTE: FZF_DEFAULT_OPTS is split on spaces. No spaces inside one flag (e.g. --info=inline:… must be one word).
 typeset -a _fzf_common_ui=(
   '--info=inline:·'
   '--separator=─'
@@ -61,7 +60,8 @@ typeset -a _fzf_common_ui=(
   '--prompt=❯ '
 )
 
-# fzf look: Cursor/VS Code and COSMIC Terminal — Bearded Theme feat. Gold D Raynh.
+# fzf look: Cursor/VS Code and COSMIC Terminal, Bearded Theme feat. Gold D Raynh.
+## helper function to check if cosmic terminal is being used
 _cosmic_term_active() {
   local pid=$PPID comm
   while [[ -n "$pid" && "$pid" -gt 1 ]]; do
@@ -73,6 +73,7 @@ _cosmic_term_active() {
   return 1
 }
 
+## helper function to check which comsic terminal theme is being used
 _cosmic_term_theme_is() {
   local theme_name="$1"
   local quoted="\"${theme_name}\""
@@ -95,6 +96,7 @@ _cosmic_term_theme_is() {
   return $?
 }
 
+## Change color of FZF to match Bearded Theme feat. Gold D Raynh when relevant, otherwise, match the default PopOS non cosmic terminal
 if [[ "$TERM_PROGRAM" == "vscode" || "${(L)TERM_PROGRAM}" == "cursor" ]] || { _cosmic_term_active && _cosmic_term_theme_is 'Bearded Theme feat. Gold D Raynh'; }; then
   export FZF_DEFAULT_OPTS="--height 40% --layout reverse --border rounded --color=fg:#b8c4e4,bg:#0e1424,hl:#ffd000 --color=fg+:#ffffff,bg+:#131c33,hl+:#e39000 --color=info:#3eb2ff,prompt:#e39000,pointer:#e39000 --color=marker:#21ff7d,spinner:#3eb2ff,header:#2b3d6d --color=border:#2b3f72 ${_fzf_common_ui[@]}"
 else
@@ -131,27 +133,32 @@ enable_autoswitch_virtualenv
 # This ensures that e.g. Docker uses /usr/bin/docker instead of a possible snap version.
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/snap/bin:$PATH"
 
-# Golang: Add Go binary directory to PATH, so that go and installed programs are found
-export PATH=$PATH:/usr/local/go/bin
+# Golang: Set GOROOT and add Go binary directory to PATH
+if [ -d /usr/local/go ]; then
+  export GOROOT=/usr/local/go
+  export PATH="$PATH:$GOROOT/bin"
+fi
 
 # FNM (Fast Node Manager): Configure Node.js version manager if directory exists
-FNM_PATH="/home/justin-p/.local/share/fnm"
+FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/justin-p/.local/share/fnm:$PATH" # Add fnm binaries to PATH
+  export PATH="$HOME/.local/share/fnm:$PATH" # Add fnm binaries to PATH
   eval "`fnm env`"  # Set up FNM environment variables and function wrappers
 fi
 
 # Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+  export NVM_DIR="$HOME/.nvm"
+  \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
 
 # Bun: Add Bun JavaScript runtime binary to PATH
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Enable Bun's shell completions if the completion script exists
-[ -s "/home/justin-p/.bun/_bun" ] && source "/home/justin-p/.bun/_bun"
+if [ -d "$HOME/.bun/bin" ]; then
+  export BUN_INSTALL="$HOME/.bun"
+  export PATH="$BUN_INSTALL/bin:$PATH"
+  [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+fi
 
 # Source Rust's cargo environment file to update PATH and environment variables (needed for cargo commands)
 if [ -f "$HOME/.cargo/env" ]; then
