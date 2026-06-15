@@ -1,6 +1,7 @@
 [user]
     name = Justin-p
     email = justin-p@users.noreply.github.com
+    signingkey = ~/.ssh/justin_p_github_signing_key.pub
 [includeIf "gitdir:~/git/gitlab-work/"]
     path = .gitconfig-work
 [includeIf "gitdir:~/.ansible/tmp/"]
@@ -28,6 +29,15 @@
     log = less -FRX
     show = less -FRX
     diff = less -FRX
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.config/git/allowed_signers
+
+[commit]
+    gpgsign = true
 
 [filter "lfs"]
     required = true
