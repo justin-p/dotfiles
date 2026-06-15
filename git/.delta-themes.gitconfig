@@ -1,0 +1,37 @@
+# Delta color themes for this dotfiles repo.
+# https://dandavison.github.io/delta/custom-themes.html
+#
+# Activate in ~/.gitconfig:
+#   [include]
+#       path = .delta-themes.gitconfig
+#   [delta]
+#       features = bearded-theme-feat-gold-d-raynh
+
+# Bearded Theme feat. Gold D Raynh — cosmic-term / fzf palette
+[delta "bearded-theme-feat-gold-d-raynh"]
+    dark = true
+    syntax-theme = TwoDark
+
+    file-style = bold "#3eb2ff"
+    hunk-header-style = file line-number "#93a6d6"
+    hunk-header-decoration-style = "#2b3f72" box
+    hunk-header-file-style = bold "#3eb2ff"
+    hunk-header-line-number-style = "#e39000"
+
+    commit-style = bold "#ffd000"
+    commit-decoration-style = "#2b3f72" box
+
+    minus-style = syntax "#1c1218"
+    minus-emph-style = bold syntax "#2a1822"
+    plus-style = syntax "#0f1a14"
+    plus-emph-style = bold syntax "#152a1e"
+    zero-style = "#b8c4e4"
+
+    line-numbers = true
+    line-numbers-left-style = "#2b3d6d"
+    line-numbers-right-style = "#2b3d6d"
+    line-numbers-minus-style = "#f7775a"
+    line-numbers-plus-style = "#21ff7d"
+    line-numbers-zero-style = "#7780a0"
+
+    whitespace-error-style = "#ffd000" bold ul

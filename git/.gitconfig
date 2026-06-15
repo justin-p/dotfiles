@@ -23,10 +23,24 @@
 [color]
     ui = true
 
+[include]
+    path = .delta-themes.gitconfig
+
 [pager]
+    diff = ~/.local/bin/git-pager-delta
+    show = ~/.local/bin/git-pager-delta
     log = less -FRX
-    show = less -FRX
-    diff = less -FRX
+
+[delta]
+    features = bearded-theme-feat-gold-d-raynh
+    true-color = always
+    navigate = true
+    side-by-side = true
+    hyperlinks = true
+    conflictStyle = zdiff3
+
+[interactive]
+    diffFilter = ~/.local/bin/git-pager-delta --color-only
 
 [push]
     default = current
