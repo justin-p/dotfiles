@@ -139,11 +139,10 @@ if [ -d /usr/local/go ]; then
   export PATH="$PATH:$GOROOT/bin"
 fi
 
-# FNM (Fast Node Manager): Configure Node.js version manager if directory exists
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$HOME/.local/share/fnm:$PATH" # Add fnm binaries to PATH
-  eval "`fnm env`"  # Set up FNM environment variables and function wrappers
+# FNM (Fast Node Manager)
+if [[ -d "$HOME/.local/share/fnm" ]]; then
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "$(fnm env)"
 fi
 
 # Node Version Manager
@@ -161,6 +160,8 @@ if [ -d "$HOME/.bun/bin" ]; then
 fi
 
 # Source Rust's cargo environment file to update PATH and environment variables (needed for cargo commands)
-if [ -f "$HOME/.cargo/env" ]; then
-  . "$HOME/.cargo/env"
-fi
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# zoxide: init after ~/.cargo/bin is on PATH
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"

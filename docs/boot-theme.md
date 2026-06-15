@@ -2,7 +2,22 @@
 
 Match Plymouth boot splash and COSMIC greeter login screen to the Bearded-Gold desktop theme: navy `#0e1424`, gold `#e39000`, no Pop logo.
 
-This package is not stowed.
+**Not a stow package.** Run the install scripts with `sudo`; they deploy to system paths (`/usr/share/plymouth`, `/var/lib/cosmic-greeter`, etc.).
+
+## Layout
+
+```
+boot-theme/
+  install.sh              # Plymouth + greeter
+  plymouth/
+    install.sh
+    generate-assets.sh
+    generate-assets.py
+    assets/
+    bearded-gold/
+  greeter/
+    install.sh
+```
 
 ## Boot stages
 
@@ -14,32 +29,28 @@ This package is not stowed.
 
 ## Install
 
-Run both scripts once (requires sudo):
+Run once (requires sudo), then reboot:
 
 ```bash
-sudo ~/.dotfiles/plymouth-theme/install-plymouth-theme.sh
-sudo ~/.dotfiles/greeter-theme/install-greeter-theme.sh
+sudo ~/.dotfiles/boot-theme/install.sh
 ```
 
-Then reboot to verify the full chain.
-
-### Plymouth only
+Or install each stage separately:
 
 ```bash
-sudo ~/.dotfiles/plymouth-theme/install-plymouth-theme.sh
+sudo ~/.dotfiles/boot-theme/plymouth/install.sh
+sudo ~/.dotfiles/boot-theme/greeter/install.sh
 ```
+
+### Plymouth
 
 Regenerates PNG assets if missing, copies theme to `/usr/share/plymouth/themes/bearded-gold/`, sets it as default, rebuilds initramfs, and runs `kernelstub`.
 
 `lock.png` uses [Jam Icons padlock-f](https://proicons.com/icons/155597/padlock-f/) (MIT) recolored to `#e39000`. Regenerating assets requires Node.js (`npx sharp-cli`).
 
-### Greeter only
+### Greeter
 
-```bash
-sudo ~/.dotfiles/greeter-theme/install-greeter-theme.sh
-```
-
-Installs wallpaper to `/usr/share/backgrounds/bearded-gold-d-raynh-bg.png`, deploys Bearded theme config for the `cosmic-greeter` user, updates your user background path to the system location, and restarts greeter services.
+Installs wallpaper to `/usr/share/backgrounds/bearded-gold-d-raynh-bg.png`, deploys Bearded theme config for the `cosmic-greeter` user, updates your user background path to the system location, and restarts greeter services. Wallpaper source: `cosmic-theme/bearded-gold-d-raynh-bg.png`.
 
 ## Preview Plymouth without reboot
 
@@ -53,11 +64,11 @@ sudo plymouth quit
 
 ## Regenerate assets
 
-After editing colors in `bearded-gold/bearded-gold.plymouth`:
+After editing colors in `plymouth/bearded-gold/bearded-gold.plymouth`:
 
 ```bash
-~/.dotfiles/plymouth-theme/generate-assets.sh
-sudo ~/.dotfiles/plymouth-theme/install-plymouth-theme.sh
+~/.dotfiles/boot-theme/plymouth/generate-assets.sh
+sudo ~/.dotfiles/boot-theme/plymouth/install.sh
 ```
 
 ## Revert to Pop default
@@ -69,23 +80,6 @@ sudo kernelstub
 ```
 
 Greeter: remove `/var/lib/cosmic-greeter/.config/cosmic/` and restart `cosmic-greeter` services.
-
-## Files
-
-```
-plymouth-theme/
-  assets/
-    padlock-f.svg
-    ATTRIBUTION.md
-  bearded-gold/
-    bearded-gold.plymouth
-    (generated PNG assets)
-  generate-assets.py
-  generate-assets.sh
-  install-plymouth-theme.sh
-greeter-theme/
-  install-greeter-theme.sh
-```
 
 ## Troubleshooting
 

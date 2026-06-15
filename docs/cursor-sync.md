@@ -2,25 +2,29 @@
 
 Editor settings live in the private repo [justin-p/cursor-settings](https://github.com/justin-p/cursor-settings), synced with the **Sync Settings** extension (`zokugun.sync-settings`).
 
+## Install (stow)
+
+```bash
+cd ~/.dotfiles
+stow cursor-sync
+```
+
 ## Local clone
 
 ```bash
 git clone git@github.com:justin-p/cursor-settings.git ~/.cursor-settings
 ```
 
-## Repository config (per machine)
+## First-time setup
 
-File: `~/.config/Cursor/User/globalStorage/zokugun.sync-settings/settings.yml`
+Copy the stowed template to the path Sync Settings reads (the extension does not sync this file):
 
-```yaml
-profile: main
-repository:
-  type: git
-  path: ~/.cursor-settings
-  branch: main
+```bash
+cp ~/.config/Cursor/User/globalStorage/zokugun.sync-settings/settings.yml.example \
+   ~/.config/Cursor/User/globalStorage/zokugun.sync-settings/settings.yml
 ```
 
-A template is in `cursor-sync/settings.yml.example` (stow optional — only needed on new machines).
+Template in the repo: `cursor-sync/.config/Cursor/User/globalStorage/zokugun.sync-settings/settings.yml.example`
 
 ## Day to day
 
@@ -33,10 +37,11 @@ Upload auto-pushes (`syncSettings.hooks.postUpload: git push`).
 
 ## New machine checklist
 
-1. Clone `~/.cursor-settings` (above).
-2. Copy or create `settings.yml` from `cursor-sync/settings.yml.example`.
-3. Install Cursor extensions: **Cron Tasks**, **Sync Settings**.
-4. **Download** once.
+1. `stow cursor-sync`
+2. Clone `~/.cursor-settings` (above).
+3. Copy `settings.yml.example` → `settings.yml` (above).
+4. Install Cursor extensions: **Cron Tasks**, **Sync Settings**.
+5. **Download** once.
 
 ## What is synced
 

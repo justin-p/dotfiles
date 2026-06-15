@@ -13,6 +13,16 @@ ohmyzsh/ohmyzsh path:plugins/tmux                # Adds tmux integration & alias
 ohmyzsh/ohmyzsh path:plugins/docker              # Helpful docker aliases & completions
 ohmyzsh/ohmyzsh path:plugins/docker-compose      # Adds docker-compose CLI aliases
 ohmyzsh/ohmyzsh path:plugins/vscode              # Shortcuts and helpers for Visual Studio Code
+ohmyzsh/ohmyzsh path:plugins/gh                  # GitHub CLI aliases and completions
+ohmyzsh/ohmyzsh path:plugins/systemd             # systemctl/journalctl tab completion
+ohmyzsh/ohmyzsh path:plugins/sudo                # Press Esc twice to prefix line with sudo
+ohmyzsh/ohmyzsh path:plugins/golang              # Go build/test/run aliases
+ohmyzsh/ohmyzsh path:plugins/rust                # Cargo aliases and completions
+ohmyzsh/ohmyzsh path:plugins/bun                 # Bun aliases and completions
+ohmyzsh/ohmyzsh path:plugins/extract             # Universal archive extractor (x file.tar.gz)
+ohmyzsh/ohmyzsh path:plugins/copypath            # Copy cwd or file path to clipboard
+ohmyzsh/ohmyzsh path:plugins/colorize            # Syntax-colored cat for source files
+ohmyzsh/ohmyzsh path:plugins/safe-paste          # Escape pasted text so multiline paste cannot run commands
 
 # https://github.com/Aloxaf/fzf-tab - Adds fuzzy matching to tab completion using fzf
 Aloxaf/fzf-tab
@@ -23,10 +33,13 @@ zdharma/fast-syntax-highlighting
 # https://github.com/zsh-users/zsh-autosuggestions - Suggests commands based on your history as you type
 zsh-users/zsh-autosuggestions
 
+# https://github.com/MichaelAquilina/zsh-you-should-use - Reminds you when a typed command has an alias
+MichaelAquilina/zsh-you-should-use
+
 # https://github.com/zsh-users/zsh-completions - Adds many extra command completions for zsh
 zsh-users/zsh-completions
 
-# https://github.com/sunlei/zsh-ssh - Better host completion for ssh in Zsh. 
+# https://github.com/sunlei/zsh-ssh - Better host completion for ssh in Zsh
 sunlei/zsh-ssh
 
 # https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv - Automatically activates Python virtualenvs when you cd into a directory
