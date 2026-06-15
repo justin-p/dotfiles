@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Keep ~/.ssh on local disk (SSH requires strict permissions) and sync keys with
+# this machine's folder on ~/homesrv/.ssh/machines/.
+
+LOCAL_SSH="${HOME}/.ssh"
+REMOTE_SSH="${HOME}/homesrv/.ssh"
+HOMESRV="${HOME}/homesrv"
+MACHINE_ID_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/ssh-sync/machine-id"
+
+if [[ -z "${SSH_SYNC_MACHINE_ID:-}" && -f "${MACHINE_ID_FILE}" ]]; then
+  SSH_SYNC_MACHINE_ID=$(tr -d '[:space:]' < "${MACHINE_ID_FILE}")
+fi
+
+MACHINE_ID="${SSH_SYNC_MACHINE_ID:-$(hostname -s)}"
+MACHINE_ID="${MACHINE_ID//\//-}"
+REMOTE_MACHINE="${REMOTE_SSH}/machines/${MACHINE_ID}"
+
+RSYNC_EXCLUDES=(
+  --exclude 'agent*'
+  --exclude 'control-*'
+  --exclude '*.sock'
+)
+
+RSYNC_KEY_INCLUDES=(
+  --include '*/'
+  --include 'id_*'
+  --include '*_key'
+  --include '*.pub'
+  --exclude '*'
+)
+
+ssh_sync_fix_local_perms() {
+  chmod 700 "${LOCAL_SSH}"
+  find "${LOCAL_SSH}" -type f -name 'id_*' ! -name '*.pub' -exec chmod 600 {} +
+  find "${LOCAL_SSH}" -type f \( -name 'config' -o -name 'known_hosts' -o -name 'known_hosts.old' \) -exec chmod 600 {} +
+  find "${LOCAL_SSH}" -type f -name '*.pub' -exec chmod 644 {} +
+}
+
+ssh_sync_migrate_legacy_layout() {
+  local item name target has_legacy=false
+
+  shopt -s nullglob
+  for item in "${REMOTE_SSH}"/*; do
+    name=$(basename "${item}")
+    [[ "${name}" == "machines" ]] && continue
+    [[ "${name}" == ".sync-lock" ]] && continue
+    has_legacy=true
+    break
+  done
+
+  [[ "${has_legacy}" == false ]] && return 0
+
+  mkdir -p "${REMOTE_MACHINE}"
+
+  for item in "${REMOTE_SSH}"/*; do
+    name=$(basename "${item}")
+    [[ "${name}" == "machines" ]] && continue
+    [[ "${name}" == ".sync-lock" ]] && continue
+    target="${REMOTE_MACHINE}/${name}"
+    if [[ ! -e "${target}" ]]; then
+      mv "${item}" "${REMOTE_MACHINE}/"
+    else
+      rm -rf "${item}"
+    fi
+  done
+  shopt -u nullglob
+}
+
+ssh_sync_rsync_keys() {
+  rsync -a --update \
+    "${RSYNC_EXCLUDES[@]}" \
+    "${RSYNC_KEY_INCLUDES[@]}" \
+    "$1" "$2"
+}
+
+main() {
+  local quiet=false
+  [[ "${1:-}" == '--quiet' ]] && quiet=true
+
+  if ! mountpoint -q "${HOMESRV}" 2>/dev/null; then
+    "${quiet}" || echo "sync-ssh-keys-to-homesrv: ${HOMESRV} is not mounted; skipping." >&2
+    exit 0
+  fi
+
+  mkdir -p "${LOCAL_SSH}" "${REMOTE_SSH}"
+
+  ssh_sync_migrate_legacy_layout
+  mkdir -p "${REMOTE_MACHINE}"
+
+  # Bidirectional key sync with this machine's folder only.
+  ssh_sync_rsync_keys "${REMOTE_MACHINE}/" "${LOCAL_SSH}/"
+  ssh_sync_rsync_keys "${LOCAL_SSH}/" "${REMOTE_MACHINE}/"
+
+  ssh_sync_fix_local_perms
+
+  "${quiet}" || echo "sync-ssh-keys-to-homesrv: synced keys ${LOCAL_SSH} <-> ${REMOTE_MACHINE}"
+}
+
+main "$@"

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+systemctl --user enable --now sync-ssh-keys-to-homesrv.timer
+systemctl --user status sync-ssh-keys-to-homesrv.timer --no-pager

@@ -4,4 +4,4 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=%h/.local/bin/sync-ssh --quiet
+ExecStart=%h/.local/bin/sync-ssh-keys-to-homesrv --quiet
