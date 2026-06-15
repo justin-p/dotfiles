@@ -7,7 +7,7 @@ Primary shell: antidote plugin bundle, fzf/fzf-tab theming, PATH setup, fnm, Rus
 ```bash
 cd ~/.dotfiles
 stow zsh
-stow spaceship fzf git    # recommended companions
+stow spaceship fzf git eza    # recommended companions
 ```
 
 Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-term.md).
@@ -18,7 +18,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 |------|---------|
 | `~/.zshrc` | Shell init, PATH, fzf theme, fnm/cargo/bun/zoxide |
 | `~/.zsh_plugins` | antidote plugin list |
-| `~/.zsh_alias` | Custom aliases and wrappers (`cat`, `git`, `cd`, `df`, `htop`, `find`) |
+| `~/.zsh_alias` | Custom aliases and wrappers (`cat`, `git`, `cd`, `df`, `htop`, `find`, `ping`, `ls`, `eza`) |
 
 ## First login
 
@@ -39,21 +39,27 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 
 | Wrapper | Behavior |
 |---------|----------|
-| `cat` | Uses OMZ `colorize` (`ccat`) when available; needs `pygmentize` or `chroma` |
+| `cat` | [bat](https://github.com/sharkdp/bat) with `--paging=never` when installed (`batcat` on Debian/Ubuntu); else plain `cat` — see [bat.md](bat.md) |
+| `chelp` | Colorized `cmd --help` via bat when installed |
 | `git` | Routes `commit` / `add` through `better-commits` |
 | `cd` | Uses zoxide `z` when available |
 | `df` | Warns `Consider using duf instead.` when duf is installed; still runs plain `df` |
 | `htop` | Warns `Consider using btop instead.` when btop is installed; still runs plain `htop` |
 | `find` | Warns `Consider using fd/fdfind instead.` when installed; still runs plain `find` |
+| `ping` | Warns to use `gping` and/or `mtr` when installed; still runs plain `ping` |
+| `ls` | Warns `Consider using eza instead.` when eza is installed; still runs plain `ls` |
+| `eza` | Adds `--icons=auto --group-directories-first -Alh --git --header`; auto-ignores SMB mounts from `~/.config/smb/*.env`; tree mode (`-T`) also ignores `.git` — see [eza.md](eza.md) |
 
 Wrappers fall back to plain builtins/commands under `CURSOR_AGENT` / `CURSOR_TRACE`.
 
 ## Gotchas
 
 - Some paths are user-specific (`/home/justin-p/...`).
-- `better-commits`, `zoxide`, `cat`, `df`, `htop`, and `find` wrappers are disabled under `CURSOR_AGENT` / `CURSOR_TRACE`.
+- `better-commits`, `zoxide`, `cat`, `df`, `htop`, `find`, `ping`, and `ls` wrappers are disabled under `CURSOR_AGENT` / `CURSOR_TRACE`.
 - Install [duf](https://github.com/muesli/duf) for the `df` wrapper; without it, plain `df` is unchanged.
 - Install [btop](https://github.com/aristocratos/btop) for the `htop` wrapper; without it, plain `htop` is unchanged.
 - Install [fd](https://github.com/sharkdp/fd) for faster fzf search and the `find` wrapper (`fdfind` on Debian/Ubuntu); without it, fzf falls back to `find .`.
+- Install [gping](https://github.com/orf/gping) and/or `mtr` for the `ping` wrapper; without either, plain `ping` is unchanged.
+- Install [eza](https://github.com/eza-community/eza) for the `ls` hint and `eza` wrapper; theme via `stow eza` — see [eza.md](eza.md). Pair with `stow smb` so mount ignores match your profiles.
 - Install [zoxide](https://github.com/ajeetdsouza/zoxide) separately if you want the `cd` wrapper; it is not an antidote plugin.
 - `nvm` is still sourced from `~/.zshrc` if present alongside fnm.

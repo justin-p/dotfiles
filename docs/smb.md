@@ -59,6 +59,8 @@ Unmounts all profiles, removes fstab entries, deletes local `*.env` and `*.crede
 | `~/.config/smb/{name}.env` | Server, share, mount point |
 | `~/.config/smb/{name}.credentials` | Username + password (single source for auth) |
 
+Zsh `eza` reads `MOUNT_POINT` from each `*.env` profile and auto-ignores those directories in listings — see [eza.md](eza.md).
+
 ## Troubleshooting
 
 smbclient works, `mount error(13)` on mount: userspace smbclient negotiates SMB3 encryption automatically; kernel `mount.cifs` does not unless you ask. Add to the profile `.env`:

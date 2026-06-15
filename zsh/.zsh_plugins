@@ -6,7 +6,6 @@ getantidote/use-omz
 
 # Plugins from ohmyzsh/ohmyzsh:
 # https://github.com/ohmyzsh/ohmyzsh (see plugin subpaths)
-ohmyzsh/ohmyzsh path:plugins/colored-man-pages   # Adds color to man pages for easier reading
 ohmyzsh/ohmyzsh path:plugins/git                 # Provides many useful git aliases & completions
 ohmyzsh/ohmyzsh path:plugins/command-not-found   # Suggests package to install when command is missing
 ohmyzsh/ohmyzsh path:plugins/tmux                # Adds tmux integration & aliases
@@ -21,7 +20,6 @@ ohmyzsh/ohmyzsh path:plugins/rust                # Cargo aliases and completions
 ohmyzsh/ohmyzsh path:plugins/bun                 # Bun aliases and completions
 ohmyzsh/ohmyzsh path:plugins/extract             # Universal archive extractor (x file.tar.gz)
 ohmyzsh/ohmyzsh path:plugins/copypath            # Copy cwd or file path to clipboard
-ohmyzsh/ohmyzsh path:plugins/colorize            # Syntax-colored cat for source files
 ohmyzsh/ohmyzsh path:plugins/safe-paste          # Escape pasted text so multiline paste cannot run commands
 
 # https://github.com/Aloxaf/fzf-tab - Adds fuzzy matching to tab completion using fzf

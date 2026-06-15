@@ -45,6 +45,25 @@ elif command -v fdfind &>/dev/null; then
   _FD_CMD=fdfind
 fi
 
+# bat / batcat (Debian/Ubuntu ship the binary as batcat)
+typeset -g _BAT_CMD=
+if command -v bat &>/dev/null; then
+  _BAT_CMD=bat
+elif command -v batcat &>/dev/null; then
+  _BAT_CMD=batcat
+  alias bat=batcat
+fi
+if [[ -n ${_BAT_CMD:-} ]]; then
+  # https://github.com/sharkdp/bat#integration-with-other-tools
+  typeset -g _FZF_BAT_PREVIEW=${HOME}/.local/bin/fzf-bat-preview
+  [[ -x $_FZF_BAT_PREVIEW ]] || _FZF_BAT_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-bat-preview
+  export MANPAGER="${_BAT_CMD} -plman"
+  if [[ -x $_FZF_BAT_PREVIEW ]]; then
+    export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_FZF_BAT_PREVIEW}\ {}"
+  fi
+  # --help → bat: global alias in ~/.zsh_alias (https://github.com/sharkdp/bat#highlighting---help-messages)
+fi
+
 # Source a file containing custom aliases if it exists (~/.zsh_alias)
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
 
@@ -67,6 +86,7 @@ typeset -a _fzf_common_ui=(
   '--pointer=▌'
   '--prompt=❯ '
 )
+export FZF_TMUX_HEIGHT=70%   # Ctrl+T / Alt+C (fzf key-bindings default is 40%)
 
 # fzf look: Cursor/VS Code and COSMIC Terminal, Bearded Theme feat. Gold D Raynh.
 ## helper function to check if cosmic terminal is being used
@@ -106,9 +126,11 @@ _cosmic_term_theme_is() {
 
 ## Change color of FZF to match Bearded Theme feat. Gold D Raynh when relevant, otherwise, match the default PopOS non cosmic terminal
 if [[ "$TERM_PROGRAM" == "vscode" || "${(L)TERM_PROGRAM}" == "cursor" ]] || { _cosmic_term_active && _cosmic_term_theme_is 'Bearded Theme feat. Gold D Raynh'; }; then
-  export FZF_DEFAULT_OPTS="--height 40% --layout reverse --border rounded --color=fg:#b8c4e4,bg:#0e1424,hl:#ffd000 --color=fg+:#ffffff,bg+:#131c33,hl+:#e39000 --color=info:#3eb2ff,prompt:#e39000,pointer:#e39000 --color=marker:#21ff7d,spinner:#3eb2ff,header:#2b3d6d --color=border:#2b3f72 ${_fzf_common_ui[@]}"
+  export FZF_DEFAULT_OPTS="--height 70% --min-height 15+ --layout reverse --border rounded --color=fg:#b8c4e4,bg:#0e1424,hl:#ffd000 --color=fg+:#ffffff,bg+:#131c33,hl+:#e39000 --color=info:#3eb2ff,prompt:#e39000,pointer:#e39000 --color=marker:#21ff7d,spinner:#3eb2ff,header:#2b3d6d --color=border:#2b3f72 ${_fzf_common_ui[@]}"
+  [[ -n ${_BAT_CMD:-} ]] && export BAT_THEME=Bearded-Gold-D-Raynh
 else
-  export FZF_DEFAULT_OPTS="--height 40% --layout reverse --border rounded --color=fg:#d3d7cf,bg:#2e3436,hl:#fce94f --color=fg+:#eeeeec,bg+:#3d4548,hl+:#edd400 --color=info:#729fcf,prompt:#8ae234,pointer:#ad7fa8 --color=marker:#34e2e2,spinner:#729fcf,header:#555753 --color=border:#585a5c ${_fzf_common_ui[@]}"
+  export FZF_DEFAULT_OPTS="--height 70% --min-height 15+ --layout reverse --border rounded --color=fg:#d3d7cf,bg:#2e3436,hl:#fce94f --color=fg+:#eeeeec,bg+:#3d4548,hl+:#edd400 --color=info:#729fcf,prompt:#8ae234,pointer:#ad7fa8 --color=marker:#34e2e2,spinner:#729fcf,header:#555753 --color=border:#585a5c ${_fzf_common_ui[@]}"
+  [[ -n ${_BAT_CMD:-} ]] && export BAT_THEME=TwoDark
 fi
 unset -f _cosmic_term_active _cosmic_term_theme_is
 unset _fzf_common_ui
@@ -137,6 +159,12 @@ zstyle ':completion:*:descriptions' format '[%d]' e
 
 # fzf-tab: inherit theme + prompt layout from FZF_DEFAULT_OPTS (see Aloxaf/fzf-tab README).
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
+if [[ -n ${_BAT_CMD:-} ]]; then
+  zstyle ':fzf-tab:complete:*' fzf-preview-window 'right:55%,border-rounded'
+  if [[ -x ${_FZF_BAT_PREVIEW:-} ]]; then
+    zstyle ':fzf-tab:complete:*:*' fzf-preview '[[ -f ${(Q)realpath} ]] && '"${_FZF_BAT_PREVIEW}"' ${(Q)realpath}'
+  fi
+fi
 
 # Enable the zsh-autoswitch-virtualenv plugin (fixes a known issue)
 enable_autoswitch_virtualenv

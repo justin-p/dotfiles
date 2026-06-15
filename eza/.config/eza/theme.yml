@@ -1,0 +1,100 @@
+# Bearded Theme feat. Gold D Raynh — matches cosmic-term / fzf palette
+colourful: true
+
+filekinds:
+  normal:
+    foreground: "#b8c4e4"
+  directory:
+    foreground: "#3eb2ff"
+    is_bold: true
+  symlink:
+    foreground: "#44f8e9"
+  pipe:
+    foreground: "#e4ac73"
+  block_device:
+    foreground: "#fdac5a"
+  char_device:
+    foreground: "#fdac5a"
+  socket:
+    foreground: "#e4ac73"
+  special:
+    foreground: "#ffd000"
+  executable:
+    foreground: "#21ff7d"
+  mount_point:
+    foreground: "#3eb2ff"
+
+perms:
+  user_read:
+    foreground: "#ffd000"
+    is_bold: true
+  user_write:
+    foreground: "#f7775a"
+    is_bold: true
+  user_execute_file:
+    foreground: "#21ff7d"
+    is_bold: true
+  user_execute_other:
+    foreground: "#21ff7d"
+    is_bold: true
+  group_read:
+    foreground: "#93a6d6"
+  group_write:
+    foreground: "#ff7252"
+  group_execute:
+    foreground: "#21ff7d"
+  other_read:
+    foreground: "#7780a0"
+  other_write:
+    foreground: "#a04d3a"
+  other_execute:
+    foreground: "#15a651"
+
+sizes:
+  major:
+    foreground: "#f7775a"
+    is_bold: true
+  minor:
+    foreground: "#93a6d6"
+
+users:
+  user_you:
+    foreground: "#3eb2ff"
+    is_bold: true
+  user_root:
+    foreground: "#f7775a"
+    is_bold: true
+
+links:
+  normal:
+    foreground: "#44f8e9"
+  multi_link_file:
+    foreground: "#ffd000"
+
+punctuation:
+  foreground: "#2b3d6d"
+
+date:
+  foreground: "#93a6d6"
+
+inode:
+  foreground: "#7780a0"
+
+blocks:
+  foreground: "#7780a0"
+
+header:
+  foreground: "#b8c4e4"
+  is_bold: true
+
+git:
+  new:
+    foreground: "#21ff7d"
+  modified:
+    foreground: "#ffd000"
+  deleted:
+    foreground: "#f7775a"
+  renamed:
+    foreground: "#3eb2ff"
+  metadata:
+    foreground: "#e4ac73"

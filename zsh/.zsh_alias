@@ -5,7 +5,9 @@ alias ii='xdg-open'
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
+    if ! command -v eza &>/dev/null; then
+      alias ls='ls --color=auto'
+    fi
     alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
 
@@ -14,19 +16,48 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colorize plugin: use syntax-highlighted cat by default (disabled under Cursor agent shells)
+# bat: syntax-highlighted cat (https://github.com/sharkdp/bat; disabled under Cursor agent shells)
 cat() {
   if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
     command cat "$@"
     return
   fi
 
-  if (( ${+aliases[ccat]} )); then
-    ccat "$@"
+  if [[ -n ${_BAT_CMD:-} ]]; then
+    "$_BAT_CMD" --paging=never "$@"
   else
     command cat "$@"
   fi
 }
+
+# bat: colorized command help (https://github.com/sharkdp/bat#highlighting---help-messages)
+if [[ -n ${_BAT_CMD:-} ]]; then
+  bathelp() {
+    local tmp
+    tmp=$(mktemp "${TMPDIR:-/tmp}/bathelp.XXXXXX") || return 1
+    cat > "$tmp"
+    "$_BAT_CMD" --color=always --style=plain --language=help --paging=never "$tmp"
+    rm -f "$tmp"
+  }
+  chelp() {
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command "$@" --help 2>&1
+      return
+    fi
+    command "$@" --help 2>&1 | bathelp
+  }
+  # Wrappers that inject flags must pass --help through unchanged; bat colors via global alias below.
+  _bat_has_help_flag() {
+    local arg
+    for arg in "$@"; do
+      [[ $arg == --help ]] && return 0
+    done
+    return 1
+  }
+  if [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]]; then
+    alias -g -- '--help=--help 2>&1 | bathelp'
+  fi
+fi
 
 # better-commits git wrapper (disabled under Cursor agent shells)
 git() {
@@ -34,6 +65,8 @@ git() {
     command git "$@"
     return
   fi
+
+  (( ${+functions[_bat_has_help_flag]} )) && _bat_has_help_flag "$@" && { command git "$@"; return; }
 
   if command -v npm &>/dev/null; then
     if ! command -v better-commits &>/dev/null; then
@@ -65,12 +98,39 @@ cd() {
 
 # Prefer a modern CLI tool (bold/colored hint, same palette as zsh-you-should-use)
 _prefer_tool_hint() {
-  local preferred=$1
-  if command -v tput &>/dev/null; then
-    print -u2 "$(tput bold)$(tput setaf 3)Consider using $(tput setaf 5)$preferred$(tput setaf 3) instead.$(tput sgr0)"
-  else
-    print -u2 "Consider using $preferred instead."
+  (( $# )) || return
+
+  if ! command -v tput &>/dev/null; then
+    case $# in
+      1) print -u2 "Consider using $1 instead." ;;
+      2) print -u2 "Consider using $1 or $2 instead." ;;
+      *)
+        local label="${(j:, :)@}"
+        print -u2 "Consider using ${label%%, *} or ${@[-1]} instead."
+        ;;
+    esac
+    return
   fi
+
+  local yellow="$(tput bold)$(tput setaf 3)"
+  local purple="$(tput setaf 5)"
+  local reset="$(tput sgr0)"
+  local out="${yellow}Consider using ${reset}"
+  local i=1 tool
+
+  for tool in "$@"; do
+    if (( i > 1 )); then
+      if (( i == $# )); then
+        out+="${yellow} or ${reset}"
+      else
+        out+="${yellow}, ${reset}"
+      fi
+    fi
+    out+="${purple}${tool}${reset}"
+    (( i++ ))
+  done
+  out+="${yellow} instead.${reset}"
+  print -u2 "$out"
 }
 
 # duf: warn when using df if duf is installed
@@ -106,5 +166,121 @@ if [[ -n ${_FD_CMD:-} ]]; then
     fi
     _prefer_tool_hint "$_FD_CMD"
     command find "$@"
+  }
+fi
+
+# gping/mtr: warn when using ping if either is installed
+if command -v gping &>/dev/null || command -v mtr &>/dev/null; then
+  ping() {
+    local -a alts=()
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command ping "$@"
+      return
+    fi
+    command -v mtr &>/dev/null && alts+=(mtr)
+    command -v gping &>/dev/null && alts+=(gping)
+    (( ${#alts[@]} )) && _prefer_tool_hint "${alts[@]}"
+    command ping "$@"
+  }
+fi
+
+# eza: defaults, SMB/tree ignores, and ls hint when eza is installed
+if command -v eza &>/dev/null; then
+  # Build ignore list from SMB profiles (~/.config/smb/*.env MOUNT_POINT basenames).
+  # Keeps network mounts (nas, homesrv, …) out of listings; avoids slow tree walks in ~.
+  _eza_load_smb_ignores() {
+    local env_file line mp name
+    _EZA_SMB_IGNORES=()
+    if [[ -d ${HOME}/.config/smb ]]; then
+      for env_file in ${HOME}/.config/smb/*.env(N); do
+        line=$(grep -E '^MOUNT_POINT=' "$env_file" | tail -1)
+        [[ -z $line ]] && continue
+        mp=${line#MOUNT_POINT=}
+        mp=${mp//\$\{HOME\}/${HOME}}
+        mp=${mp/#\~/${HOME}}
+        name=${mp##*/}
+        [[ -n $name && ${_EZA_SMB_IGNORES[(Ie)name]} -eq 0 ]] && _EZA_SMB_IGNORES+=("$name")
+      done
+    fi
+    (( ${#_EZA_SMB_IGNORES[@]} )) || _EZA_SMB_IGNORES=(nas)
+  }
+  _eza_load_smb_ignores
+
+  # True when -T / --tree is present (including combined flags like -Ta).
+  _eza_tree_mode() {
+    local arg
+    for arg in "$@"; do
+      case $arg in
+        --tree|-T) return 0 ;;
+        -[^-]*) [[ $arg == *T* ]] && return 0 ;;
+      esac
+    done
+    return 1
+  }
+
+  # True when the user already passed -I / --ignore-glob covering this pattern.
+  _eza_user_ignores() {
+    local pattern=$1
+    shift
+    local arg next=0
+    for arg in "$@"; do
+      if (( next )); then
+        [[ $arg == *${pattern}* ]] && return 0
+        next=0
+        continue
+      fi
+      case $arg in
+        -I*) [[ ${arg#-I} == *${pattern}* ]] && return 0 ;;
+        --ignore-glob=*) [[ ${arg#--ignore-glob=} == *${pattern}* ]] && return 0 ;;
+        --ignore-glob) next=1 ;;
+      esac
+    done
+    return 1
+  }
+
+  # Wrapper: inject default flags and auto-ignores, then forward user args unchanged.
+  eza() {
+    (( ${+functions[_bat_has_help_flag]} )) && _bat_has_help_flag "$@" && { command eza "$@"; return; }
+
+    local -a eza_args=(--icons=auto --group-directories-first)
+    local -a ignore_patterns=()
+    local pattern
+
+    # Always skip SMB mount dirs (nas, homesrv, …) unless user passed -I for them.
+    for pattern in ${_EZA_SMB_IGNORES[@]}; do
+      if ! _eza_user_ignores "$pattern" "$@"; then
+        ignore_patterns+=("$pattern")
+      fi
+    done
+    # .git only in tree mode, huge and rarely useful in a directory tree.
+    if _eza_tree_mode "$@" && ! _eza_user_ignores '.git' "$@"; then
+      ignore_patterns+=('.git')
+    fi
+    # eza only honors one -I, join patterns with | (multiple -I flags override each other).
+    if (( ${#ignore_patterns[@]} )); then
+      eza_args+=(-I "${(j:|:)ignore_patterns}")
+    fi
+    # Long listing, hidden files, git column, column headers.
+    eza_args+=(-Alhg --git --header)
+    command eza "${eza_args[@]}" "$@"
+  }
+
+  unalias ls 2>/dev/null
+  # Warn-only ls wrapper; use eza directly for the modern listing.
+  ls() {
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command ls "$@"
+      return
+    fi
+    (( ${+functions[_bat_has_help_flag]} )) && _bat_has_help_flag "$@" && {
+      command ls --color=auto "$@"
+      return
+    }
+    _prefer_tool_hint eza
+    if [[ -x /usr/bin/dircolors ]]; then
+      command ls --color=auto "$@"
+    else
+      command ls "$@"
+    fi
   }
 fi

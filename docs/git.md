@@ -49,3 +49,4 @@ Pager config uses a direct path (no `!` shell prefix — git config mangles quot
 - `includeIf` loads `~/.gitconfig-work` for `~/git/gitlab-work/` (not in this repo).
 - `better-commits` wrapper alias lives in `zsh/.zsh_alias`.
 - OMZ `git` plugin aliases (e.g. `gd` for `git diff`) work with the delta pager once `stow git` is applied.
+- Git diffs use [delta](https://github.com/dandavison/delta), not bat — see [bat.md](bat.md) for what bat covers instead.

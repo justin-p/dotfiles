@@ -13,8 +13,8 @@ stow bash
 
 | Alias | Command |
 |-------|---------|
-| `ls` | `lsd` |
-| `cat` | `bat` |
+| `ls` | `eza --icons=always --group-directories-first` |
+| `cat` | `bat --paging=never` or `batcat --paging=never` — see [bat.md](bat.md) |
 | `grep` | `rg` |
 | `ii` | `xdg-open` |
 | `ssh-add` | `ssh-add -t 1h` |

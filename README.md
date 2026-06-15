@@ -9,11 +9,13 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 | Package | Type | Doc |
 |---------|------|-----|
 | bash | Stow | [docs/bash.md](docs/bash.md) |
+| bat | Stow | [docs/bat.md](docs/bat.md) |
 | boot-theme | Install | [docs/boot-theme.md](docs/boot-theme.md) |
 | BurpSuite | Stow | [docs/burpsuite.md](docs/burpsuite.md) |
 | cosmic-term | Stow | [docs/cosmic-term.md](docs/cosmic-term.md) |
 | cosmic-theme | Manual | [docs/cosmic-theme.md](docs/cosmic-theme.md) |
 | cursor-sync | Stow | [docs/cursor-sync.md](docs/cursor-sync.md) |
+| eza | Stow | [docs/eza.md](docs/eza.md) |
 | fan_control | Manual | [docs/fan-control.md](docs/fan-control.md) |
 | firefox | Stow + script | [docs/firefox.md](docs/firefox.md) |
 | flameshot | Stow | [docs/flameshot.md](docs/flameshot.md) |
@@ -41,17 +43,18 @@ Primary shell is **zsh** ([docs/zsh.md](docs/zsh.md)). Bash aliases ([docs/bash.
 
 | Command | Routed to | Requires |
 |---------|-----------|----------|
-| `ls` | [lsd](https://github.com/lsd-rs/lsd) | `lsd` on `PATH` |
-| `cat` | [bat](https://github.com/sharkdp/bat) | `bat` on `PATH` |
+| `ls` | [eza](https://github.com/eza-community/eza) | `eza` on `PATH` |
+| `cat` | `bat` or `batcat` | [bat](https://github.com/sharkdp/bat) (`batcat` on Debian/Ubuntu) |
 | `grep` | [rg](https://github.com/BurntSushi/ripgrep) | `rg` on `PATH` |
 
 ### Zsh - replacements (`zsh/.zsh_alias`)
 
 | Command | Routed to | Requires |
 |---------|-----------|----------|
-| `cat` | `ccat` (OMZ colorize) | `pygmentize` or `chroma` |
+| `cat` | `bat` or `batcat` | [bat](https://github.com/sharkdp/bat) (`batcat` on Debian/Ubuntu) |
 | `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) `z` | `zoxide` on `PATH` |
 | `git commit` / `git add` | [better-commits](https://github.com/pvande/better-commits) | `npm` |
+| `eza` | [eza](https://github.com/eza-community/eza) with defaults + SMB/tree ignores | `eza` on `PATH`; SMB profiles optional ([docs/eza.md](docs/eza.md)) |
 
 ### Zsh - warn only (still runs the original command)
 
@@ -62,6 +65,8 @@ Prints `Consider using <tool> instead.` when the modern tool is installed. Defin
 | `df` | `duf` | [duf](https://github.com/muesli/duf) |
 | `htop` | `btop` | [btop](https://github.com/aristocratos/btop) |
 | `find` | `fd` or `fdfind` | [fd](https://github.com/sharkdp/fd) (`fdfind` on Debian/Ubuntu) |
+| `ping` | `gping` or `mtr` | [gping](https://github.com/orf/gping) and/or `mtr` |
+| `ls` | `eza` | [eza](https://github.com/eza-community/eza) |
 
 ### Zsh - fzf file source (`zsh/.zshrc`)
 
@@ -80,6 +85,18 @@ See [docs/fzf.md](docs/fzf.md).
 
 `stow git` symlinks the pager script and [Bearded Theme feat. Gold D Raynh](docs/cosmic-term.md) delta colors (`git/.delta-themes.gitconfig`).
 
-### Agent / IDE shells
+### bat ([docs/bat.md](docs/bat.md))
+
+`stow bat` installs **Bearded Theme feat. Gold D Raynh** syntax colors (`~/.config/bat/`).
+
+| Integration | Behavior |
+|-------------|----------|
+| `cat` | bat with `--paging=never` (zsh + bash) |
+| `man` | `MANPAGER` → bat syntax highlighting |
+| `--help` | zsh global alias + `chelp`; bash `chelp` |
+| fzf Ctrl+T / fzf-tab | File preview with bat |
+| `git diff` / `git show` | delta pager (not bat) |
+
+## Agent / IDE shells
 
 Zsh wrappers above are **disabled** under `CURSOR_AGENT` / `CURSOR_TRACE` (plain `command` / `builtin` behavior). The OMZ **git** plugin plus **zsh-you-should-use** also nudge toward short aliases (e.g. `gd` instead of `git diff`).

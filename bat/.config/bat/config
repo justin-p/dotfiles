@@ -1,0 +1,4 @@
+# Bearded Theme feat. Gold D Raynh — matches cosmic-term / fzf / eza palette.
+# Custom theme: ~/.config/bat/themes/Bearded-Gold-D-Raynh.tmTheme (stow bat)
+# Rebuild after theme changes: bat cache --build  (or batcat cache --build)
+--theme="Bearded-Gold-D-Raynh"

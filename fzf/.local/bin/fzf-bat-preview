@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# fzf file preview via bat — https://github.com/sharkdp/bat#fzf
+path=$1
+[[ -n $path && -f $path ]] || exit 0
+
+bat_cmd=
+command -v bat &>/dev/null && bat_cmd=bat
+command -v batcat &>/dev/null && bat_cmd=${bat_cmd:-batcat}
+[[ -n $bat_cmd ]] || exit 0
+
+exec "$bat_cmd" --color=always --style=numbers --line-range=:500 --paging=never "$path"
