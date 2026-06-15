@@ -55,11 +55,11 @@ elif command -v batcat &>/dev/null; then
 fi
 if [[ -n ${_BAT_CMD:-} ]]; then
   # https://github.com/sharkdp/bat#integration-with-other-tools
-  typeset -g _FZF_BAT_PREVIEW=${HOME}/.local/bin/fzf-bat-preview
-  [[ -x $_FZF_BAT_PREVIEW ]] || _FZF_BAT_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-bat-preview
+  typeset -g _FZF_FILE_PREVIEW=${HOME}/.local/bin/fzf-file-preview
+  [[ -x $_FZF_FILE_PREVIEW ]] || _FZF_FILE_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview
   export MANPAGER="${_BAT_CMD} -plman"
-  if [[ -x $_FZF_BAT_PREVIEW ]]; then
-    export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_FZF_BAT_PREVIEW}\ {}"
+  if [[ -x $_FZF_FILE_PREVIEW ]]; then
+    export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_FZF_FILE_PREVIEW}\ {}"
   fi
   # --help → bat: global alias in ~/.zsh_alias (https://github.com/sharkdp/bat#highlighting---help-messages)
 fi
@@ -81,6 +81,7 @@ fi
 # fzf prompt/info layout: shared by vanilla fzf (Ctrl+R, ** …) and fzf-tab (use-fzf-default-opts).
 # NOTE: FZF_DEFAULT_OPTS is split on spaces. No spaces inside one flag (e.g. --info=inline:… must be one word).
 typeset -a _fzf_common_ui=(
+  '--ansi'
   '--info=inline:·'
   '--separator=─'
   '--pointer=▌'
@@ -159,11 +160,56 @@ zstyle ':completion:*:descriptions' format '[%d]' e
 
 # fzf-tab: inherit theme + prompt layout from FZF_DEFAULT_OPTS (see Aloxaf/fzf-tab README).
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:complete:*' fzf-preview-window 'right:55%,border-rounded'
+
+# Paths / files
+if [[ -x ${_FZF_FILE_PREVIEW:-} ]]; then
+  zstyle ':fzf-tab:complete:*:*' fzf-preview \
+    '[[ -e ${(Q)realpath} ]] && '"${_FZF_FILE_PREVIEW}"' ${(Q)realpath}'
+fi
+
+# man (uses MANPAGER → bat when installed)
+zstyle ':fzf-tab:complete:(\\|*/|)man:*' fzf-preview \
+  'MANWIDTH=${FZF_PREVIEW_COLUMNS} man $word 2>/dev/null'
+
+# kill / ps — show full command line for the selected PID
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps --pid=$word -o pid,user,cmd --no-headers -w -w 2>/dev/null'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:5:wrap
+
+# git — diffs, commits, branches (delta when installed)
+if command -v delta &>/dev/null; then
+  zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+    'git diff -- $word 2>/dev/null | delta --color-only --paging=never'
+  zstyle ':fzf-tab:complete:git-(checkout|switch):*' fzf-preview \
+    'case $group in
+      "modified file") git diff -- $word 2>/dev/null | delta --color-only --paging=never ;;
+      "recent commit object name") git show --color=always $word 2>/dev/null | delta --color-only --paging=never ;;
+      *) git log -1 --color=always $word 2>/dev/null ;;
+    esac'
+  zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+    'case $group in
+      "commit tag") git show --color=always $word 2>/dev/null ;;
+      *) git show --color=always $word 2>/dev/null | delta --color-only --paging=never ;;
+    esac'
+else
+  zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+    'git diff -- $word 2>/dev/null'
+  zstyle ':fzf-tab:complete:git-(checkout|switch):*' fzf-preview \
+    'case $group in
+      "modified file") git diff -- $word 2>/dev/null ;;
+      "recent commit object name") git show --color=always $word 2>/dev/null ;;
+      *) git log -1 --color=always $word 2>/dev/null ;;
+    esac'
+  zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+    'git show --color=always $word 2>/dev/null'
+fi
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
+  'git log -1 --color=always $word 2>/dev/null'
 if [[ -n ${_BAT_CMD:-} ]]; then
-  zstyle ':fzf-tab:complete:*' fzf-preview-window 'right:55%,border-rounded'
-  if [[ -x ${_FZF_BAT_PREVIEW:-} ]]; then
-    zstyle ':fzf-tab:complete:*:*' fzf-preview '[[ -f ${(Q)realpath} ]] && '"${_FZF_BAT_PREVIEW}"' ${(Q)realpath}'
-  fi
+  zstyle ':fzf-tab:complete:git-help:*' fzf-preview \
+    'git help $word 2>/dev/null | '"${_BAT_CMD}"' -plman --color=always --paging=never'
 fi
 
 # Enable the zsh-autoswitch-virtualenv plugin (fixes a known issue)
@@ -205,3 +251,11 @@ fi
 
 # zoxide: init after ~/.cargo/bin is on PATH
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+
+# Optional apt packages for dotfiles integrations (once per day; skipped under Cursor agent).
+if [[ -o interactive ]] && [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]]; then
+  typeset -g _dotfiles_deps_check=${HOME}/.local/bin/dotfiles-optional-deps-check
+  [[ -x $_dotfiles_deps_check ]] || _dotfiles_deps_check=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-optional-deps-check
+  [[ -x $_dotfiles_deps_check ]] && "$_dotfiles_deps_check"
+  unset _dotfiles_deps_check
+fi

@@ -16,14 +16,14 @@ if [[ -n ${_bat_cmd:-} ]]; then
     rm -f "$tmp"
   }
   chelp() { command "$@" --help 2>&1 | bathelp; }
-  _fzf_bat_preview="${HOME}/.local/bin/fzf-bat-preview"
-  [[ -x $_fzf_bat_preview ]] || _fzf_bat_preview="${HOME}/.dotfiles/fzf/.local/bin/fzf-bat-preview"
+  _fzf_file_preview="${HOME}/.local/bin/fzf-file-preview"
+  [[ -x $_fzf_file_preview ]] || _fzf_file_preview="${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview"
   # https://github.com/sharkdp/bat#integration-with-other-tools
   export MANPAGER="${_bat_cmd} -plman"
-  if [[ -x $_fzf_bat_preview ]]; then
-    export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_fzf_bat_preview}\ {}"
+  if [[ -x $_fzf_file_preview ]]; then
+    export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_fzf_file_preview}\ {}"
   fi
-  unset _bat_cmd _fzf_bat_preview
+  unset _bat_cmd _fzf_file_preview
 fi
 
 alias ii='xdg-open'

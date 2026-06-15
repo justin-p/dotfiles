@@ -34,6 +34,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 - **cargo** — `~/.cargo/bin` on `PATH`; sources `~/.cargo/env` when present.
 - **zoxide** — `eval "$(zoxide init zsh)"` after cargo (zoxide is often installed via `cargo install`).
 - **fzf** — `FZF_DEFAULT_COMMAND` uses `fd` or `fdfind` when installed, else `find .`.
+- **fzf-tab** — previews for paths (`fzf-file-preview`), `man`, `kill`/`ps`, git (delta/bat), and docker containers. See [fzf.md](fzf.md).
 
 ## Wrappers in `~/.zsh_alias`
 
@@ -51,6 +52,16 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `eza` | Adds `--icons=auto --group-directories-first -Alh --git --header`; auto-ignores SMB mounts from `~/.config/smb/*.env`; tree mode (`-T`) also ignores `.git` — see [eza.md](eza.md) |
 
 Wrappers fall back to plain builtins/commands under `CURSOR_AGENT` / `CURSOR_TRACE`.
+
+## Optional apt tools
+
+On interactive startup (once per day), `dotfiles-optional-deps-check` warns if recommended packages are missing and prints one `sudo apt install …` line. Skipped under `CURSOR_AGENT` / `CURSOR_TRACE` and on non-Debian systems.
+
+```bash
+DOTFILES_OPTIONAL_DEPS_FORCE=1 dotfiles-optional-deps-check   # re-check now
+```
+
+Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `chafa`, `poppler-utils`, `ffmpegthumbnailer`, `atool`, `libimage-exiftool-perl`, `mediainfo`, `duf`, `btop`, `gping`, `mtr-tiny`. See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
 
 ## Gotchas
 

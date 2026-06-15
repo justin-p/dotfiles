@@ -30,8 +30,8 @@ Zsh sets `BAT_THEME` to match the active terminal: Bearded in COSMIC Terminal / 
 | `man` | zsh, bash | `MANPAGER="bat -plman"` (replaces OMZ `colored-man-pages`) |
 | `--help` | zsh | Global alias pipes any `cmd --help` through bat; use `chelp` for explicit calls |
 | `--help` | bash | `chelp cmd` |
-| fzf Ctrl+T | zsh, bash | `FZF_CTRL_T_OPTS` + `fzf-bat-preview` script |
-| fzf-tab | zsh | File completion preview via `fzf-bat-preview` |
+| fzf Ctrl+T | zsh, bash | `FZF_CTRL_T_OPTS` + `fzf-file-preview` (bat, chafa, PDF/video, archives) |
+| fzf-tab | zsh | Path completion preview via `fzf-file-preview` |
 | `git diff` / `git show` | — | [delta](git.md) pager instead (better than bat for diffs) |
 
 Zsh detects `bat` or `batcat` via `_BAT_CMD` in `~/.zshrc` (same pattern as `_FD_CMD` for `fd`/`fdfind`).
@@ -56,7 +56,7 @@ git show v1.0.0:src/main.rs | bat -l rs
 ## Gotchas
 
 - `cat` wrapper is disabled under `CURSOR_AGENT` / `CURSOR_TRACE` (zsh only); `MANPAGER` and fzf previews are always on when bat is installed.
-- fzf preview caps at 500 lines (`--line-range=:500`) for speed on large files.
+- fzf preview: bat for text (500-line cap), **chafa** for images (`sudo apt install chafa`). Kitty/Ghostty use `kitten icat` when available.
 - Preview pane is on the **right** (55% width). Press **?** in fzf to toggle preview if hidden.
-- `stow fzf` installs `~/.local/bin/fzf-bat-preview`; re-run if preview says command not found.
+- `stow fzf` installs `~/.local/bin/fzf-file-preview`; re-run if preview says command not found.
 - On Debian/Ubuntu the package installs `batcat`; dotfiles alias it to `bat`.

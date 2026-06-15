@@ -4,7 +4,9 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 
 ## Packages
 
-**Stow** (`cd ~/.dotfiles && stow <name>`) symlinks config into `$HOME`. **Install** packages use scripts; **Manual** packages are source files or copy-paste setup.
+- **Stow** (`cd ~/.dotfiles && stow <name>`) symlinks config into `$HOME`.
+- **Install** packages use scripts.
+- **Manual** packages are source files or copy-paste setup.
 
 | Package | Type | Doc |
 |---------|------|-----|
@@ -94,7 +96,7 @@ See [docs/fzf.md](docs/fzf.md).
 | `cat` | bat with `--paging=never` (zsh + bash) |
 | `man` | `MANPAGER` → bat syntax highlighting |
 | `--help` | zsh global alias + `chelp`; bash `chelp` |
-| fzf Ctrl+T / fzf-tab | File preview with bat |
+| fzf Ctrl+T / fzf-tab | File preview (bat, chafa, PDF/video thumbs, archives, git dirs) |
 | `git diff` / `git show` | delta pager (not bat) |
 
 ## Agent / IDE shells

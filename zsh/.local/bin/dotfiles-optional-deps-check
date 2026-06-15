@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Warn when optional apt packages for dotfiles integrations are missing.
+# Runs from ~/.zshrc (once per day). Force: DOTFILES_OPTIONAL_DEPS_FORCE=1
+
+[[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]] || exit 0
+command -v apt-get &>/dev/null || exit 0
+
+stamp=${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-optional-deps.stamp
+mkdir -p "${stamp%/*}"
+today=$(date +%Y%m%d)
+if [[ ${DOTFILES_OPTIONAL_DEPS_FORCE:-} != 1 ]] && [[ -f $stamp ]] && [[ $(<"$stamp") == "$today" ]]; then
+  exit 0
+fi
+
+# apt package : command names (| = any one satisfies)
+_pairs=(
+  'bat:bat|batcat'
+  'fd-find:fd|fdfind'
+  'eza:eza'
+  'git-delta:delta'
+  'ripgrep:rg'
+  'zoxide:zoxide'
+  'chafa:chafa'
+  'poppler-utils:pdftoppm'
+  'ffmpegthumbnailer:ffmpegthumbnailer'
+  'atool:atool'
+  'libimage-exiftool-perl:exiftool'
+  'mediainfo:mediainfo'
+  'duf:duf'
+  'btop:btop'
+  'gping:gping'
+  'mtr-tiny:mtr'
+)
+
+missing=()
+for entry in "${_pairs[@]}"; do
+  pkg=${entry%%:*}
+  cmds=${entry#*:}
+  IFS='|' read -ra bins <<< "$cmds"
+  found=0
+  for cmd in "${bins[@]}"; do
+    if command -v "$cmd" &>/dev/null; then
+      found=1
+      break
+    fi
+  done
+  (( found )) || missing+=("$pkg")
+done
+
+echo "$today" > "$stamp"
+(( ${#missing[@]} )) || exit 0
+
+install_cmd="sudo apt install ${missing[*]}"
+if command -v tput &>/dev/null; then
+  yellow=$(tput setaf 3)$(tput bold)
+  reset=$(tput sgr0)
+else
+  yellow= reset=
+fi
+
+printf '%s\n' "${yellow}dotfiles: optional tools not installed (bat, fzf preview, eza, delta, …):${reset}" >&2
+printf '  %s\n' "${missing[*]}" >&2
+printf '%s\n' "${yellow}Install:${reset} ${install_cmd}" >&2
