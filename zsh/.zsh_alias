@@ -62,3 +62,49 @@ cd() {
     builtin cd "$@"
   fi
 }
+
+# Prefer a modern CLI tool (bold/colored hint, same palette as zsh-you-should-use)
+_prefer_tool_hint() {
+  local preferred=$1
+  if command -v tput &>/dev/null; then
+    print -u2 "$(tput bold)$(tput setaf 3)Consider using $(tput setaf 5)$preferred$(tput setaf 3) instead.$(tput sgr0)"
+  else
+    print -u2 "Consider using $preferred instead."
+  fi
+}
+
+# duf: warn when using df if duf is installed
+if command -v duf &>/dev/null; then
+  df() {
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command df "$@"
+      return
+    fi
+    _prefer_tool_hint duf
+    command df "$@"
+  }
+fi
+
+# btop: warn when using htop if btop is installed
+if command -v btop &>/dev/null; then
+  htop() {
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command htop "$@"
+      return
+    fi
+    _prefer_tool_hint btop
+    command htop "$@"
+  }
+fi
+
+# fd/fdfind: warn when using find if a fd binary is installed
+if [[ -n ${_FD_CMD:-} ]]; then
+  find() {
+    if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then
+      command find "$@"
+      return
+    fi
+    _prefer_tool_hint "$_FD_CMD"
+    command find "$@"
+  }
+fi

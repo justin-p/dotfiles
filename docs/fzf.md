@@ -19,4 +19,4 @@ Pair with `zsh` for Bearded Gold fzf colors in Cursor / COSMIC Terminal — see 
 ## Gotchas
 
 - Paths assume fzf is installed at `~/.fzf` (cloned automatically by `zsh/.zshrc` on first login if missing).
-- `zsh/.zshrc` also sets `FZF_DEFAULT_OPTS` and theme colors.
+- `zsh/.zshrc` also sets `FZF_DEFAULT_OPTS`, theme colors, and `FZF_DEFAULT_COMMAND` (`fd` or `fdfind` when installed, else `find .`).

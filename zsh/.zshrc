@@ -37,6 +37,14 @@ source <(antidote init)
 # Load all plugins listed in ~/.zsh_plugins (one per line)
 antidote bundle < ~/.zsh_plugins
 
+# fd / fdfind (Debian/Ubuntu ship the binary as fdfind)
+typeset -g _FD_CMD=
+if command -v fd &>/dev/null; then
+  _FD_CMD=fd
+elif command -v fdfind &>/dev/null; then
+  _FD_CMD=fdfind
+fi
+
 # Source a file containing custom aliases if it exists (~/.zsh_alias)
 [ -f ~/.zsh_alias ] && source ~/.zsh_alias
 
@@ -117,8 +125,12 @@ unset _fzf_common_ui
   done
 }
 
-# Set fzf's default command to 'find .' so all files (including dotfiles) are shown by default in fzf
-export FZF_DEFAULT_COMMAND='find .'
+# fzf: fd/fdfind when installed (hidden files, follows symlinks); else find
+if [[ -n ${_FD_CMD:-} ]]; then
+  export FZF_DEFAULT_COMMAND="$_FD_CMD --hidden --follow --exclude .git"
+else
+  export FZF_DEFAULT_COMMAND='find .'
+fi
 
 # Set a custom format for completion descriptions in fzf-tab
 zstyle ':completion:*:descriptions' format '[%d]' e

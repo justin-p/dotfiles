@@ -32,3 +32,54 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 | zsh | Stow | [docs/zsh.md](docs/zsh.md) |
 
 Windows setup: [docs/windows.md](docs/windows.md) (`bootstrap.ps1`, `update.ps1`).
+
+## Modern CLI tooling
+
+Primary shell is **zsh** ([docs/zsh.md](docs/zsh.md)). Bash aliases ([docs/bash.md](docs/bash.md)) apply when you source `~/.bash_aliases` from a non-zsh session.
+
+### Bash - hard replacements (`bash/.bash_aliases`)
+
+| Command | Routed to | Requires |
+|---------|-----------|----------|
+| `ls` | [lsd](https://github.com/lsd-rs/lsd) | `lsd` on `PATH` |
+| `cat` | [bat](https://github.com/sharkdp/bat) | `bat` on `PATH` |
+| `grep` | [rg](https://github.com/BurntSushi/ripgrep) | `rg` on `PATH` |
+
+### Zsh - replacements (`zsh/.zsh_alias`)
+
+| Command | Routed to | Requires |
+|---------|-----------|----------|
+| `cat` | `ccat` (OMZ colorize) | `pygmentize` or `chroma` |
+| `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) `z` | `zoxide` on `PATH` |
+| `git commit` / `git add` | [better-commits](https://github.com/pvande/better-commits) | `npm` |
+
+### Zsh - warn only (still runs the original command)
+
+Prints `Consider using <tool> instead.` when the modern tool is installed. Defined in `zsh/.zsh_alias`; needs the optional tool on `PATH`.
+
+| Command | Suggests | Requires |
+|---------|----------|----------|
+| `df` | `duf` | [duf](https://github.com/muesli/duf) |
+| `htop` | `btop` | [btop](https://github.com/aristocratos/btop) |
+| `find` | `fd` or `fdfind` | [fd](https://github.com/sharkdp/fd) (`fdfind` on Debian/Ubuntu) |
+
+### Zsh - fzf file source (`zsh/.zshrc`)
+
+| Setting | Uses `fd` / `fdfind` | Fallback |
+|---------|----------------------|----------|
+| `FZF_DEFAULT_COMMAND` | `fd --hidden --follow --exclude .git` | `find .` |
+
+See [docs/fzf.md](docs/fzf.md).
+
+### Git - pager ([docs/git.md](docs/git.md))
+
+| Command | Pager | Fallback |
+|---------|-------|----------|
+| `git diff`, `git show` | [delta](https://github.com/dandavison/delta) via `~/.local/bin/git-pager-delta` | `less -FRX` |
+| interactive rebase diffs | delta `--color-only` (same wrapper) | `cat` |
+
+`stow git` symlinks the pager script and [Bearded Theme feat. Gold D Raynh](docs/cosmic-term.md) delta colors (`git/.delta-themes.gitconfig`).
+
+### Agent / IDE shells
+
+Zsh wrappers above are **disabled** under `CURSOR_AGENT` / `CURSOR_TRACE` (plain `command` / `builtin` behavior). The OMZ **git** plugin plus **zsh-you-should-use** also nudge toward short aliases (e.g. `gd` instead of `git diff`).
