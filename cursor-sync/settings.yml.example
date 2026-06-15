@@ -1,0 +1,11 @@
+# Copy to:
+#   ~/.config/Cursor/User/globalStorage/zokugun.sync-settings/settings.yml
+#
+# Sync Settings does not sync this file — each machine keeps its own copy.
+
+profile: main
+
+repository:
+  type: git
+  path: ~/.cursor-settings
+  branch: main

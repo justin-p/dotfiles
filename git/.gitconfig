@@ -11,7 +11,6 @@
     branch = auto
     diff = auto
     interactive = auto
-    pager = true
     status = auto
     ui = true
     editor = code -n -w # VS Code
@@ -23,6 +22,12 @@
     
 [push]
     default = current
+    autoSetupRemote = true
+
+[pager]
+    log = less -FRX
+    show = less -FRX
+    diff = less -FRX
 
 [filter "lfs"]
     required = true
