@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Warn when optional apt packages for dotfiles integrations are missing.
+# Warn when optional tools for dotfiles integrations are missing.
 # Runs from ~/.zshrc (once per day). Force: DOTFILES_OPTIONAL_DEPS_FORCE=1
 
 [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]] || exit 0
@@ -12,52 +12,98 @@ if [[ ${DOTFILES_OPTIONAL_DEPS_FORCE:-} != 1 ]] && [[ -f $stamp ]] && [[ $(<"$st
   exit 0
 fi
 
-# apt package : command names (| = any one satisfies)
-_pairs=(
-  'bat:bat|batcat'
-  'fd-find:fd|fdfind'
-  'eza:eza'
-  'git-delta:delta'
-  'ripgrep:rg'
-  'zoxide:zoxide'
-  'chafa:chafa'
-  'poppler-utils:pdftoppm'
-  'ffmpegthumbnailer:ffmpegthumbnailer'
-  'atool:atool'
-  'libimage-exiftool-perl:exiftool'
-  'mediainfo:mediainfo'
-  'duf:duf'
-  'btop:btop'
-  'gping:gping'
-  'mtr-tiny:mtr'
+# label:cmds,…:apt_pkg:apt_install_name:other_hint
+# cmds: comma-separated binaries (any one satisfies)
+# apt_install_name: user-facing name for "sudo apt install …" (defaults to apt_pkg)
+# other_hint: used when apt_pkg is empty or not in your apt repos
+_deps=(
+  'bat:bat,batcat:bat:bat:'
+  'fd:fd,fdfind:fd-find:fd-find:'
+  'eza:eza:eza:eza:'
+  'git delta:delta:git-delta:git-delta:'
+  'ripgrep:rg:ripgrep:ripgrep:'
+  'zoxide:zoxide:zoxide:zoxide:cargo install zoxide'
+  'fzf:fzf:fzf:fzf:git clone to ~/.fzf (auto on first zsh login) or: sudo apt install fzf'
+  'chafa:chafa:chafa:chafa:'
+  'PDF preview (pdftoppm):pdftoppm:poppler-utils:poppler-utils:'
+  'PDF preview (mutool):mutool:mupdf-tools:mupdf-tools:'
+  'video thumbnails:ffmpegthumbnailer:ffmpegthumbnailer:ffmpegthumbnailer:'
+  'archives:atool:atool:atool:'
+  'metadata (exiftool):exiftool:libimage-exiftool-perl:exiftool:'
+  'metadata (mediainfo):mediainfo:mediainfo:mediainfo:'
+  'disk usage:duf:duf:duf:'
+  'process monitor:btop:btop:btop:'
+  'ping graph:gping:gping:gping:snap install gping'
+  'ping trace:mtr:mtr-tiny:mtr-tiny:'
+  'GitHub CLI:gh:gh:gh:'
+  'better-commits:better-commits::better-commits:npm install -g better-commits'
 )
 
-missing=()
-for entry in "${_pairs[@]}"; do
-  pkg=${entry%%:*}
-  cmds=${entry#*:}
-  IFS='|' read -ra bins <<< "$cmds"
-  found=0
-  for cmd in "${bins[@]}"; do
-    if command -v "$cmd" &>/dev/null; then
-      found=1
-      break
-    fi
+_apt_candidate() {
+  local pkg=$1 candidate
+  candidate=$(apt-cache policy "$pkg" 2>/dev/null | awk '/Candidate:/ { print $2; exit }')
+  [[ -n $candidate && $candidate != '(none)' ]]
+}
+
+_has_cmd() {
+  local cmd
+  for cmd in "$@"; do
+    command -v "$cmd" &>/dev/null && return 0
   done
-  (( found )) || missing+=("$pkg")
+  return 1
+}
+
+missing_labels=()
+apt_install=()
+other_hints=()
+
+for entry in "${_deps[@]}"; do
+  IFS=':' read -r label cmds apt_pkg apt_name other_hint <<< "$entry"
+  IFS=',' read -ra bins <<< "$cmds"
+
+  if [[ $label == 'fzf' ]]; then
+    _has_cmd "${bins[@]}" || [[ -x ${HOME}/.fzf/bin/fzf ]] && continue
+  elif _has_cmd "${bins[@]}"; then
+    continue
+  fi
+
+  missing_labels+=("$label")
+  apt_name=${apt_name:-$apt_pkg}
+
+  if [[ -n $apt_pkg ]] && _apt_candidate "$apt_pkg"; then
+    apt_install+=("$apt_name")
+  elif [[ -n $other_hint ]]; then
+    other_hints+=("$label: $other_hint")
+  elif [[ -n $apt_pkg ]]; then
+    other_hints+=("$label: apt package '$apt_pkg' not in your repos")
+  fi
 done
 
 echo "$today" > "$stamp"
-(( ${#missing[@]} )) || exit 0
+(( ${#missing_labels[@]} )) || exit 0
 
-install_cmd="sudo apt install ${missing[*]}"
-if command -v tput &>/dev/null; then
+if command -v tput &>/dev/null && [[ -n ${TERM:-} ]]; then
   yellow=$(tput setaf 3)$(tput bold)
   reset=$(tput sgr0)
 else
   yellow= reset=
 fi
 
-printf '%s\n' "${yellow}dotfiles: optional tools not installed (bat, fzf preview, eza, delta, …):${reset}" >&2
-printf '  %s\n' "${missing[*]}" >&2
-printf '%s\n' "${yellow}Install:${reset} ${install_cmd}" >&2
+printf '%s\n' "${yellow}dotfiles: optional tools not installed:${reset}" >&2
+printf '  %s\n' "${missing_labels[*]}" >&2
+
+if (( ${#apt_install[@]} )); then
+  declare -A _seen=()
+  apt_unique=()
+  for pkg in "${apt_install[@]}"; do
+    [[ -n ${_seen[$pkg]+x} ]] && continue
+    _seen[$pkg]=1
+    apt_unique+=("$pkg")
+  done
+  printf '%s\n' "${yellow}Install (apt):${reset} sudo apt install ${apt_unique[*]}" >&2
+fi
+
+if (( ${#other_hints[@]} )); then
+  printf '%s\n' "${yellow}Install (other):${reset}" >&2
+  printf '  %s\n' "${other_hints[@]}" >&2
+fi

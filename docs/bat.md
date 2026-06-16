@@ -6,8 +6,8 @@
 
 ```bash
 sudo apt install bat    # binary is batcat on Debian/Ubuntu
-stow bat                  # theme + config → ~/.config/bat/
-batcat cache --build      # register custom theme (once after stow)
+stow bat                  # theme + config + help syntax → ~/.config/bat/
+batcat cache --build      # register custom theme/syntaxes (also auto on zsh start)
 ```
 
 ## Theme
@@ -18,6 +18,7 @@ batcat cache --build      # register custom theme (once after stow)
 |------|---------|
 | `~/.config/bat/config` | Default `--theme="Bearded-Gold-D-Raynh"` |
 | `~/.config/bat/themes/Bearded-Gold-D-Raynh.tmTheme` | Syntax colors (derived from TwoDark, recolored) |
+| `~/.config/bat/syntaxes/cmd-help.sublime-syntax` | `--language=help` for colorized `cmd --help` (from [cmd-help-sublime-syntax](https://github.com/victor-gp/cmd-help-sublime-syntax)) |
 
 Zsh sets `BAT_THEME` to match the active terminal: Bearded in COSMIC Terminal / Cursor / VS Code, `TwoDark` elsewhere (same logic as fzf colors in `~/.zshrc`).
 
@@ -41,7 +42,7 @@ man --help            # zsh: auto via global alias
 chelp docker          # explicit, works in bash too
 ```
 
-Zsh expands `--help` to `--help 2>&1 | bathelp` everywhere via a global alias (`alias -g`). Wrappers that add extra flags (`eza`, `git`, `ls`) detect `--help` and pass it through unchanged first.
+Zsh expands `--help` to `--help 2>&1 | bathelp` via a global alias when bat lists the `help` syntax (after `stow bat`). Wrappers that add extra flags (`eza`, `git`, `ls`) detect `--help` and pass it through unchanged first.
 
 We do **not** alias `-h` globally (`ls -h` is human-readable sizes). Ubuntu's zsh 5.9 has no `abbr` module.
 

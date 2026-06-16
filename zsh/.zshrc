@@ -54,6 +54,19 @@ elif command -v batcat &>/dev/null; then
   alias bat=batcat
 fi
 if [[ -n ${_BAT_CMD:-} ]]; then
+  # Rebuild bat cache when custom themes/syntaxes change (required for BAT_THEME and --language=help).
+  local _bat_config=${XDG_CONFIG_HOME:-$HOME/.config}/bat
+  local _bat_cache=${XDG_CACHE_HOME:-$HOME/.cache}/bat/syntaxes.bin
+  if [[ -d $_bat_config/themes || -d $_bat_config/syntaxes ]] && {
+    [[ ! -f $_bat_cache ]] ||
+    find "$_bat_config"/{themes,syntaxes} \( -name '*.tmTheme' -o -name '*.sublime-syntax' \) \
+      -newer "$_bat_cache" -print -quit 2>/dev/null | grep -q .
+  }; then
+    "$_BAT_CMD" cache --build &>/dev/null
+  fi
+  # --language=help is optional; only pipe --help through bat when bat lists it.
+  typeset -g _BAT_HELP_OK=
+  "$_BAT_CMD" --list-languages 2>/dev/null | grep -qE '(^|:|,)(cmd-help|help)(,|$)' && _BAT_HELP_OK=1
   # https://github.com/sharkdp/bat#integration-with-other-tools
   typeset -g _FZF_FILE_PREVIEW=${HOME}/.local/bin/fzf-file-preview
   [[ -x $_FZF_FILE_PREVIEW ]] || _FZF_FILE_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview
@@ -128,10 +141,18 @@ _cosmic_term_theme_is() {
 ## Change color of FZF to match Bearded Theme feat. Gold D Raynh when relevant, otherwise, match the default PopOS non cosmic terminal
 if [[ "$TERM_PROGRAM" == "vscode" || "${(L)TERM_PROGRAM}" == "cursor" ]] || { _cosmic_term_active && _cosmic_term_theme_is 'Bearded Theme feat. Gold D Raynh'; }; then
   export FZF_DEFAULT_OPTS="--height 70% --min-height 15+ --layout reverse --border rounded --color=fg:#b8c4e4,bg:#0e1424,hl:#ffd000 --color=fg+:#ffffff,bg+:#131c33,hl+:#e39000 --color=info:#3eb2ff,prompt:#e39000,pointer:#e39000 --color=marker:#21ff7d,spinner:#3eb2ff,header:#2b3d6d --color=border:#2b3f72 ${_fzf_common_ui[@]}"
-  [[ -n ${_BAT_CMD:-} ]] && export BAT_THEME=Bearded-Gold-D-Raynh
+  if [[ -n ${_BAT_CMD:-} ]] && "$_BAT_CMD" --list-themes 2>/dev/null | grep -qx 'Bearded-Gold-D-Raynh'; then
+    export BAT_THEME=Bearded-Gold-D-Raynh
+  else
+    unset BAT_THEME
+  fi
 else
   export FZF_DEFAULT_OPTS="--height 70% --min-height 15+ --layout reverse --border rounded --color=fg:#d3d7cf,bg:#2e3436,hl:#fce94f --color=fg+:#eeeeec,bg+:#3d4548,hl+:#edd400 --color=info:#729fcf,prompt:#8ae234,pointer:#ad7fa8 --color=marker:#34e2e2,spinner:#729fcf,header:#555753 --color=border:#585a5c ${_fzf_common_ui[@]}"
-  [[ -n ${_BAT_CMD:-} ]] && export BAT_THEME=TwoDark
+  if [[ -n ${_BAT_CMD:-} ]] && "$_BAT_CMD" --list-themes 2>/dev/null | grep -qx 'TwoDark'; then
+    export BAT_THEME=TwoDark
+  else
+    unset BAT_THEME
+  fi
 fi
 unset -f _cosmic_term_active _cosmic_term_theme_is
 unset _fzf_common_ui
@@ -180,18 +201,20 @@ zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=do
 
 # git — diffs, commits, branches (delta when installed)
 if command -v delta &>/dev/null; then
+  typeset -g _GIT_DELTA_PAGER=${HOME}/.local/bin/git-pager-delta
+  [[ -x $_GIT_DELTA_PAGER ]] || _GIT_DELTA_PAGER=${HOME}/.dotfiles/git/.local/bin/git-pager-delta
   zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
-    'git diff -- $word 2>/dev/null | delta --color-only --paging=never'
+    'git diff -- $word 2>/dev/null | '"${_GIT_DELTA_PAGER}"' --color-only --paging=never'
   zstyle ':fzf-tab:complete:git-(checkout|switch):*' fzf-preview \
     'case $group in
-      "modified file") git diff -- $word 2>/dev/null | delta --color-only --paging=never ;;
-      "recent commit object name") git show --color=always $word 2>/dev/null | delta --color-only --paging=never ;;
+      "modified file") git diff -- $word 2>/dev/null | '"${_GIT_DELTA_PAGER}"' --color-only --paging=never ;;
+      "recent commit object name") git show --color=always $word 2>/dev/null | '"${_GIT_DELTA_PAGER}"' --color-only --paging=never ;;
       *) git log -1 --color=always $word 2>/dev/null ;;
     esac'
   zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
     'case $group in
       "commit tag") git show --color=always $word 2>/dev/null ;;
-      *) git show --color=always $word 2>/dev/null | delta --color-only --paging=never ;;
+      *) git show --color=always $word 2>/dev/null | '"${_GIT_DELTA_PAGER}"' --color-only --paging=never ;;
     esac'
 else
   zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \

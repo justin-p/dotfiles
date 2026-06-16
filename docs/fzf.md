@@ -13,11 +13,13 @@ Symlinks `~/.fzf.zsh`, `~/.fzf.bash`, and `~/.local/bin/fzf-file-preview`.
 
 ### Optional preview tools
 
-Installed via apt when missing — `~/.zshrc` runs `dotfiles-optional-deps-check` once per day and prints:
+Installed via apt when missing — `~/.zshrc` runs `dotfiles-optional-deps-check` once per day. Example apt line:
 
 ```bash
-sudo apt install chafa poppler-utils ffmpegthumbnailer atool libimage-exiftool-perl mediainfo
+sudo apt install chafa poppler-utils mupdf-tools ffmpegthumbnailer atool exiftool mediainfo
 ```
+
+Note: the `mutool` binary comes from **`mupdf-tools`** (not a package named `mutool`). `exiftool` is the apt-friendly name for `libimage-exiftool-perl`.
 
 Full package list (bat, fd-find, eza, delta, …): see [zsh.md](zsh.md#optional-apt-tools).
 

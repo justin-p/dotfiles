@@ -31,7 +31,7 @@ cat() {
 }
 
 # bat: colorized command help (https://github.com/sharkdp/bat#highlighting---help-messages)
-if [[ -n ${_BAT_CMD:-} ]]; then
+if [[ -n ${_BAT_CMD:-} && -n ${_BAT_HELP_OK:-} ]]; then
   bathelp() {
     local tmp
     tmp=$(mktemp "${TMPDIR:-/tmp}/bathelp.XXXXXX") || return 1
@@ -57,6 +57,8 @@ if [[ -n ${_BAT_CMD:-} ]]; then
   if [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]]; then
     alias -g -- '--help=--help 2>&1 | bathelp'
   fi
+elif [[ -n ${_BAT_CMD:-} ]]; then
+  chelp() { command "$@" --help 2>&1; }
 fi
 
 # better-commits git wrapper (disabled under Cursor agent shells)

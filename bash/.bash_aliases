@@ -8,14 +8,18 @@ fi
 if [[ -n ${_bat_cmd:-} ]]; then
   alias cat="${_bat_cmd} --paging=never"
   alias bat="${_bat_cmd}"
-  bathelp() {
-    local tmp
-    tmp=$(mktemp "${TMPDIR:-/tmp}/bathelp.XXXXXX") || return 1
-    cat > "$tmp"
-    bat --color=always --style=plain --language=help --paging=never "$tmp"
-    rm -f "$tmp"
-  }
-  chelp() { command "$@" --help 2>&1 | bathelp; }
+  if "${_bat_cmd}" --list-languages 2>/dev/null | grep -qE '(^|:|,)(cmd-help|help)(,|$)'; then
+    bathelp() {
+      local tmp
+      tmp=$(mktemp "${TMPDIR:-/tmp}/bathelp.XXXXXX") || return 1
+      cat > "$tmp"
+      "${_bat_cmd}" --color=always --style=plain --language=help --paging=never "$tmp"
+      rm -f "$tmp"
+    }
+    chelp() { command "$@" --help 2>&1 | bathelp; }
+  else
+    chelp() { command "$@" --help 2>&1; }
+  fi
   _fzf_file_preview="${HOME}/.local/bin/fzf-file-preview"
   [[ -x $_fzf_file_preview ]] || _fzf_file_preview="${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview"
   # https://github.com/sharkdp/bat#integration-with-other-tools

@@ -55,13 +55,13 @@ Wrappers fall back to plain builtins/commands under `CURSOR_AGENT` / `CURSOR_TRA
 
 ## Optional apt tools
 
-On interactive startup (once per day), `dotfiles-optional-deps-check` warns if recommended packages are missing and prints one `sudo apt install …` line. Skipped under `CURSOR_AGENT` / `CURSOR_TRACE` and on non-Debian systems.
+On interactive startup (once per day), `dotfiles-optional-deps-check` warns if recommended tools are missing. It checks binaries on `PATH` (and `~/.fzf/bin/fzf`), suggests `sudo apt install …` only for packages available in your apt repos, and prints separate hints for non-apt installs (e.g. `mupdf-tools` for `mutool`, `snap install gping`, `npm install -g better-commits`). Skipped under `CURSOR_AGENT` / `CURSOR_TRACE` and on non-Debian systems.
 
 ```bash
 DOTFILES_OPTIONAL_DEPS_FORCE=1 dotfiles-optional-deps-check   # re-check now
 ```
 
-Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `chafa`, `poppler-utils`, `ffmpegthumbnailer`, `atool`, `libimage-exiftool-perl`, `mediainfo`, `duf`, `btop`, `gping`, `mtr-tiny`. See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
+Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fzf`, `chafa`, `poppler-utils`, `mupdf-tools` (`mutool`), `ffmpegthumbnailer`, `atool`, `exiftool` (`libimage-exiftool-perl`), `mediainfo`, `duf`, `btop`, `gping` (snap on Pop!_OS), `mtr-tiny`, `gh`, `better-commits` (npm). See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
 
 ## Gotchas
 

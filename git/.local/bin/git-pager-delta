@@ -1,6 +1,12 @@
 #!/usr/bin/env sh
 # Git pager: delta when installed, otherwise less -FRX (previous default).
 if command -v delta >/dev/null 2>&1; then
+  # Keep shell bat env from overriding delta's own theme config.
+  unset BAT_THEME
+  unset BAT_STYLE
+  # Host bat cache (batcat) can be incompatible with delta's embedded bat; use a separate cache.
+  export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}/delta-bat"
+  mkdir -p "$XDG_CACHE_HOME"
   exec delta "$@"
 fi
 if [ "$1" = "--color-only" ]; then
