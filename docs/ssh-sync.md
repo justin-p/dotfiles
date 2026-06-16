@@ -63,9 +63,13 @@ Disable: `systemctl --user disable --now sync-ssh-keys-to-homesrv.timer`
 - Timer uses `RandomizedDelaySec=5min` to spread load on the NAS
 - Merge with `rsync --update` (newer file wins; nothing deleted)
 - Excludes ephemeral agent/control sockets
-- Restores local permissions after each sync
+- Restores local permissions after each sync (`id_*` and `*_key` private keys → `600`, `*.pub` → `644`)
 - On first run, moves a legacy flat `~/homesrv/.ssh/*` layout into `machines/<this-host>/`
 
 ## Why not symlink?
 
 Symlinking `~/.ssh` to `~/homesrv/.ssh` breaks `ssh`/`git` because CIFS cannot enforce Unix key permissions reliably.
+
+## Gotchas
+
+- CIFS/rsync can leave private keys at `0644`. The sync script resets `id_*` and `*_key` (non-`.pub`) to `600` after each run. If git signing fails with `UNPROTECTED PRIVATE KEY FILE`, fix immediately: `chmod 600 ~/.ssh/justin_p_github_signing_key` then `ssh-add` it again — see [git.md](git.md#commit-signing-fails-agent-refused-operation).

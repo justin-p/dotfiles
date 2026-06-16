@@ -84,6 +84,8 @@ git() {
   fi
 }
 
+alias gs='git status'  # overwrites ghostscript (use command gs if needed)
+
 # zoxide: remap cd -> z (disabled under Cursor agent shells)
 cd() {
   if [[ -n ${CURSOR_AGENT:-} || -n ${CURSOR_TRACE:-} ]]; then

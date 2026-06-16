@@ -33,7 +33,7 @@ RSYNC_KEY_INCLUDES=(
 
 ssh_sync_fix_local_perms() {
   chmod 700 "${LOCAL_SSH}"
-  find "${LOCAL_SSH}" -type f -name 'id_*' ! -name '*.pub' -exec chmod 600 {} +
+  find "${LOCAL_SSH}" -type f \( -name 'id_*' -o -name '*_key' \) ! -name '*.pub' -exec chmod 600 {} +
   find "${LOCAL_SSH}" -type f \( -name 'config' -o -name 'known_hosts' -o -name 'known_hosts.old' \) -exec chmod 600 {} +
   find "${LOCAL_SSH}" -type f -name '*.pub' -exec chmod 644 {} +
 }
