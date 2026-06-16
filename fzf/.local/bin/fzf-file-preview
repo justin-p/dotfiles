@@ -65,7 +65,14 @@ _parent_is_cosmic_term() {
 
 _chafa_preview_image() {
   local img=$1 dim=$2
-  local -a args=(-s "$dim" --scale=max -c full --animate=off)
+  local -a args=(-s "$dim" -c full)
+
+  # --scale=max / --animate=off need chafa >= 1.12 (apt on Ubuntu 22.04 ships 1.8).
+  if chafa --help 2>&1 | grep -q -- '--scale'; then
+    args+=(--scale=max --animate=off)
+  else
+    args+=(--zoom -d 0)
+  fi
 
   if [[ -n ${FZF_PREVIEW_IMAGE_FORMAT:-} ]]; then
     args+=(-f "$FZF_PREVIEW_IMAGE_FORMAT")

@@ -46,7 +46,7 @@ Pair with `zsh` for Bearded Gold fzf colors in Cursor / COSMIC Terminal — see 
 | **Tab** on `kill …` | process command line (`ps`; preview below) |
 | **Tab** on `git …` | diff/log/show via delta; `git help` via bat |
 
-**GIFs:** first frame only (`chafa --animate=off`).
+**GIFs:** first frame only (`chafa --animate=off` on chafa ≥ 1.12; older apt chafa uses `-d 0 --zoom`).
 
 **Image quality:** Kitty/Ghostty and iTerm2 get sharp pixel previews. **COSMIC Terminal** and **Cursor/VS Code** use Unicode block art. Override with `FZF_PREVIEW_IMAGE_FORMAT=iterm|kitty|sixels|symbols`.
 
