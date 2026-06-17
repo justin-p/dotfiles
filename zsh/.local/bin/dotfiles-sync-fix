@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Apply fixes for dotfiles-sync-check issues (stow, commit, pull, push).
+# Dry run: dotfiles-sync-fix -n
+
+set -e
+
+dry_run=0
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -n|--dry-run) dry_run=1 ;;
+    -h|--help)
+      cat <<'EOF'
+Usage: dotfiles-sync-fix [-n|--dry-run]
+
+Runs, in order:
+  1. stow for unstowed packages
+  2. git add -A && git commit -m "…"   (if uncommitted changes; default message below)
+  3. git pull                   (if behind upstream)
+  4. git push                   (if ahead of upstream)
+
+-n, --dry-run  Print commands without running them.
+
+Default commit message: chore(dotfiles): sync local changes
+Override: DOTFILES_SYNC_COMMIT_MSG="your message"
+EOF
+      exit 0
+      ;;
+    *) echo "dotfiles-sync-fix: unknown option: $1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+command -v git &>/dev/null || { echo "dotfiles-sync-fix: git not found" >&2; exit 1; }
+command -v stow &>/dev/null || { echo "dotfiles-sync-fix: stow not found" >&2; exit 1; }
+
+_lib=${BASH_SOURCE[0]%/*}/dotfiles-sync-lib.sh
+[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-sync-lib.sh
+# shellcheck source=/dev/null
+source "$_lib"
+
+dotfiles_sync_detect 1 || exit 1
+(( ${#DOTFILES_SYNC_ISSUES[@]} )) || exit 0
+
+cd "$DOTFILES_SYNC_ROOT"
+
+if (( dry_run )); then
+  while IFS= read -r cmd; do
+    [[ -n $cmd ]] || continue
+    printf '+ %s\n' "$cmd"
+  done < <(dotfiles_sync_fix_plan)
+  exit 0
+fi
+
+if (( ${#DOTFILES_SYNC_UNSTOWED_PKGS[@]} )); then
+  stow "${DOTFILES_SYNC_UNSTOWED_PKGS[@]}"
+fi
+
+if (( DOTFILES_SYNC_DIRTY_COUNT )); then
+  git add -A
+  command git commit -m "$(dotfiles_sync_commit_msg)"
+fi
+
+if (( DOTFILES_SYNC_BEHIND )); then
+  git pull
+fi
+
+if (( DOTFILES_SYNC_AHEAD )); then
+  git push
+fi

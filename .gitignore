@@ -10,3 +10,6 @@ smb/.config/smb/*.credentials
 
 # Python bytecode
 __pycache__/
+
+# Antidote static bundle (generated in $HOME when .zsh_plugins changes)
+.zsh_plugins.zsh

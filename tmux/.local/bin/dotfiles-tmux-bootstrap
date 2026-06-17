@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Clone tmux-plugin-manager (TPM) when missing. Run once after: stow tmux
+
+set -euo pipefail
+
+dest="${HOME}/.tmux/plugins/tpm"
+
+if [[ -d "$dest" ]]; then
+  exit 0
+fi
+
+mkdir -p "${dest%/*}"
+git clone --depth 1 https://github.com/tmux-plugins/tpm "$dest"
+
+printf '%s\n' \
+  "Installed TPM at $dest" \
+  "Open tmux and press prefix+I to install plugins."

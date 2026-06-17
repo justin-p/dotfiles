@@ -49,28 +49,29 @@ Primary shell is **zsh** ([docs/zsh.md](docs/zsh.md)). Bash aliases ([docs/bash.
 | `cat` | `bat` or `batcat` | [bat](https://github.com/sharkdp/bat) (`batcat` on Debian/Ubuntu) |
 | `grep` | [rg](https://github.com/BurntSushi/ripgrep) | `rg` on `PATH` |
 
-### Zsh - replacements (`zsh/.zsh_alias`)
+### Zsh - replacements (`zsh/.zsh_alias.d/`)
 
 | Command | Routed to | Requires |
 |---------|-----------|----------|
 | `cat` | `bat` or `batcat` | [bat](https://github.com/sharkdp/bat) (`batcat` on Debian/Ubuntu) |
 | `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) `z` | `zoxide` on `PATH` |
-| `git commit` / `git add` | [better-commits](https://github.com/pvande/better-commits) | `npm` |
+| `git commit` / bare `git add` | [better-commits](https://github.com/pvande/better-commits) | `npm` |
 | `eza` | [eza](https://github.com/eza-community/eza) with defaults + SMB/tree ignores | `eza` on `PATH`; SMB profiles optional ([docs/eza.md](docs/eza.md)) |
 
 ### Zsh - warn only (still runs the original command)
 
-Prints `Consider using <tool> instead.` when the modern tool is installed. Defined in `zsh/.zsh_alias`; needs the optional tool on `PATH`.
+Prints `Consider using <tool> instead.` when the modern tool is installed. Defined in `zsh/.zsh_alias.d/`; needs the optional tool on `PATH`.
 
 | Command | Suggests | Requires |
 |---------|----------|----------|
 | `df` | `duf` | [duf](https://github.com/muesli/duf) |
 | `htop` | `btop` | [btop](https://github.com/aristocratos/btop) |
 | `find` | `fd` or `fdfind` | [fd](https://github.com/sharkdp/fd) (`fdfind` on Debian/Ubuntu) |
+| `grep` | `rg` | [ripgrep](https://github.com/BurntSushi/ripgrep) |
 | `ping` | `gping` or `mtr` | [gping](https://github.com/orf/gping) and/or `mtr` |
 | `ls` | `eza` | [eza](https://github.com/eza-community/eza) |
 
-### Zsh - fzf file source (`zsh/.zshrc`)
+### Zsh - fzf file source (`zsh/.zshrc.d/90-fzf-bindings.zsh`)
 
 | Setting | Uses `fd` / `fdfind` | Fallback |
 |---------|----------------------|----------|

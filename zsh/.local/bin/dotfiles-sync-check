@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Warn when ~/.dotfiles is out of sync (git or stow). Runs from ~/.zshrc (once per day).
+# Force: DOTFILES_SYNC_CHECK_FORCE=1
+# Skip remote fetch: DOTFILES_SYNC_CHECK_FETCH=0
+
+[[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]] || exit 0
+command -v git &>/dev/null || exit 0
+command -v stow &>/dev/null || exit 0
+
+_lib=${BASH_SOURCE[0]%/*}/dotfiles-sync-lib.sh
+[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-sync-lib.sh
+# shellcheck source=/dev/null
+source "$_lib"
+
+stamp=${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-sync.stamp
+mkdir -p "${stamp%/*}"
+today=$(date +%Y%m%d)
+if [[ ${DOTFILES_SYNC_CHECK_FORCE:-} != 1 ]] && [[ -f $stamp ]] && [[ $(<"$stamp") == "$today" ]]; then
+  exit 0
+fi
+
+fetch=1
+[[ ${DOTFILES_SYNC_CHECK_FETCH:-1} == 0 ]] && fetch=0
+dotfiles_sync_detect "$fetch" || exit 0
+
+echo "$today" >"$stamp"
+(( ${#DOTFILES_SYNC_ISSUES[@]} )) || exit 0
+
+dotfiles_sync_colors
+yb=$DOTFILES_SYNC_YELLOW_BOLD y=$DOTFILES_SYNC_YELLOW r=$DOTFILES_SYNC_RESET
+
+formatted_issues=()
+for issue in "${DOTFILES_SYNC_ISSUES[@]}"; do
+  if [[ $issue == unstowed\ packages:* ]]; then
+    formatted_issues+=("${y}unstowed packages:${r} ${issue#unstowed packages: }")
+  else
+    formatted_issues+=("$issue")
+  fi
+done
+summary=$(printf '%s; ' "${formatted_issues[@]}")
+summary=${summary%; }
+
+printf '%s\n' "${yb}dotfiles:${r} ${y}repository out of sync:${r} ${summary}" >&2
+printf '%s\n' "${yb}dotfiles:${r} ${y}fix:${r} dotfiles-sync-fix ${y}(-n to preview)${r}" >&2

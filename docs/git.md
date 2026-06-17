@@ -48,7 +48,7 @@ Pager config uses a direct path (no `!` shell prefix — git config mangles quot
 - Signing uses **SSH keys** (`gpg.format = ssh`), not GPG — see `user.signingkey` and `~/.config/git/allowed_signers`.
 - Signing key: `~/.ssh/justin_p_github_signing_key` (private) / `.pub` (in gitconfig); sync via [ssh-sync.md](ssh-sync.md).
 - `includeIf` loads `~/.gitconfig-work` for `~/git/gitlab-work/` (not in this repo).
-- `better-commits` wrapper alias lives in `zsh/.zsh_alias`.
+- `better-commits` wrapper in `zsh/.zsh_alias.d/30-git.zsh`: bare `git commit` or bare `git add` (no arguments) invokes `better-commits` when installed; otherwise prints a prefer-tool hint with `npm install -g better-commits` and falls through to git. `git add <file>`, `git commit -m`, etc. always pass through to git.
 - OMZ `git` plugin aliases (e.g. `gd` for `git diff`) work with the delta pager once `stow git` is applied.
 - Git diffs use [delta](https://github.com/dandavison/delta), not bat — see [bat.md](bat.md) for what bat covers instead.
 - `git-pager-delta` isolates delta's bat cache from host `batcat` (`~/.cache/delta-bat/`) so theme loading does not break.

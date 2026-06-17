@@ -28,7 +28,7 @@ Unset `LS_COLORS` / `EZA_COLORS` if they override the theme file.
 
 ### Zsh `eza` wrapper
 
-Defined in `zsh/.zsh_alias` when `eza` is on `PATH`.
+Defined in `zsh/.zsh_alias.d/70-eza.zsh` when `eza` is on `PATH`.
 
 **Default flags** (every `eza` invocation):
 

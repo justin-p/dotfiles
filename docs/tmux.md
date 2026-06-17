@@ -7,15 +7,19 @@ tmux with TPM, tmux-sensible, and nord-tmux theme. Large scrollback buffer.
 ```bash
 cd ~/.dotfiles
 stow tmux
+dotfiles-tmux-bootstrap    # clone TPM once if missing
 ```
 
-## Main file
+## Main files
 
-`~/.tmux.conf`
+| File | Purpose |
+|------|---------|
+| `~/.tmux.conf` | tmux config and plugin list |
+| `~/.local/bin/dotfiles-tmux-bootstrap` | Clone `~/.tmux/plugins/tpm` when missing |
 
 ## First-time plugin install
 
-`zsh/.zshrc` auto-clones `~/.tmux/plugins/tpm` on first shell login if missing. Then in tmux:
+After `dotfiles-tmux-bootstrap`, open tmux and run:
 
 ```
 prefix + I    # install plugins

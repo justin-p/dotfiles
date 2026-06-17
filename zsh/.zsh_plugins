@@ -4,6 +4,9 @@
 # https://github.com/getantidote/antidote-use-omz
 getantidote/use-omz
 
+# https://github.com/romkatv/zsh-defer - defer slow shell init until after the prompt
+romkatv/zsh-defer
+
 # Plugins from ohmyzsh/ohmyzsh:
 # https://github.com/ohmyzsh/ohmyzsh (see plugin subpaths)
 ohmyzsh/ohmyzsh path:plugins/git                 # Provides many useful git aliases & completions
@@ -25,11 +28,11 @@ ohmyzsh/ohmyzsh path:plugins/safe-paste          # Escape pasted text so multili
 # https://github.com/Aloxaf/fzf-tab - Adds fuzzy matching to tab completion using fzf
 Aloxaf/fzf-tab
 
-# https://github.com/zdharma/fast-syntax-highlighting - Highlights shell syntax as you type
-zdharma/fast-syntax-highlighting
-
 # https://github.com/zsh-users/zsh-autosuggestions - Suggests commands based on your history as you type
 zsh-users/zsh-autosuggestions
+
+# https://github.com/zdharma-continuum/fast-syntax-highlighting - Highlights shell syntax as you type (load after autosuggestions)
+zdharma-continuum/fast-syntax-highlighting
 
 # https://github.com/MichaelAquilina/zsh-you-should-use - Reminds you when a typed command has an alias
 MichaelAquilina/zsh-you-should-use
