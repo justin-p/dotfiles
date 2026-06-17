@@ -80,6 +80,11 @@ elif command -v batcat &>/dev/null; then
   _BAT_CMD=batcat
   alias bat=batcat
 fi
+
+# fzf-file-preview path (Ctrl+T, fzf-tab, zoxide zi)
+typeset -g _FZF_FILE_PREVIEW=${HOME}/.local/bin/fzf-file-preview
+[[ -x $_FZF_FILE_PREVIEW ]] || _FZF_FILE_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview
+
 if [[ -n ${_BAT_CMD:-} ]]; then
   # Rebuild bat cache when custom themes/syntaxes change (required for BAT_THEME and --language=help).
   local _bat_config=${XDG_CONFIG_HOME:-$HOME/.config}/bat
@@ -95,8 +100,6 @@ if [[ -n ${_BAT_CMD:-} ]]; then
   typeset -g _BAT_HELP_OK=
   "$_BAT_CMD" --list-languages 2>/dev/null | grep -qE '(^|:|,)(cmd-help|help)(,|$)' && _BAT_HELP_OK=1
   # https://github.com/sharkdp/bat#integration-with-other-tools
-  typeset -g _FZF_FILE_PREVIEW=${HOME}/.local/bin/fzf-file-preview
-  [[ -x $_FZF_FILE_PREVIEW ]] || _FZF_FILE_PREVIEW=${HOME}/.dotfiles/fzf/.local/bin/fzf-file-preview
   export MANPAGER="${_BAT_CMD} -plman"
   if [[ -x $_FZF_FILE_PREVIEW ]]; then
     export FZF_CTRL_T_OPTS="--preview-window=right:55%,border-rounded --preview=${_FZF_FILE_PREVIEW}\ {}"
@@ -299,8 +302,33 @@ fi
 [[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
-# zoxide: init after ~/.cargo/bin is on PATH
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+# zoxide + fzf: https://zoxide.org/tutorials/fzf-integration/
+# _ZO_FZF_OPTS replaces (not merges) FZF_DEFAULT_OPTS for zi — include theme + zoxide flags + preview.
+if command -v zoxide &>/dev/null; then
+  if command -v fzf &>/dev/null || [[ -x ${HOME}/.fzf/bin/fzf ]]; then
+  typeset -ga _zo_fzf_opts=( ${=FZF_DEFAULT_OPTS} )
+  _zo_fzf_opts+=(
+    --exact
+    --no-sort
+    --bind=ctrl-z:ignore,btab:up,tab:down
+    --cycle
+    --keep-right
+    --tabstop=1
+    --exit-0
+    --preview-window=right:55%,border-rounded
+  )
+  if [[ -x $_FZF_FILE_PREVIEW ]]; then
+    _zo_fzf_opts+=("--preview='${_FZF_FILE_PREVIEW} {2}'")
+  elif command -v eza &>/dev/null; then
+    _zo_fzf_opts+=("--preview='eza -Al --color=always --icons=auto --group-directories-first {2}'")
+  else
+    _zo_fzf_opts+=("--preview='ls -Cp --color=always --group-directories-first {2}'")
+  fi
+  export _ZO_FZF_OPTS="${(j: :)_zo_fzf_opts[@]}"
+  unset _zo_fzf_opts
+  fi
+  eval "$(zoxide init zsh)"
+fi
 
 # Optional apt packages for dotfiles integrations (once per day; skipped under Cursor agent).
 if [[ -o interactive ]] && [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]]; then
