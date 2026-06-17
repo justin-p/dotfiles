@@ -64,6 +64,7 @@ if (( DOTFILES_SYNC_BEHIND )); then
   git pull
 fi
 
-if [[ -n $DOTFILES_SYNC_UPSTREAM ]] && (( $(dotfiles_sync_ahead_count) )); then
-  git push
+if [[ -n $DOTFILES_SYNC_UPSTREAM ]]; then
+  ahead=$(dotfiles_sync_ahead_count)
+  (( ahead )) && git push
 fi

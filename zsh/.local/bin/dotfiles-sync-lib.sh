@@ -37,7 +37,7 @@ dotfiles_sync_detect() {
       git -C "$root" fetch --quiet "${upstream%%/*}" 2>/dev/null
     fi
     if counts=$(git -C "$root" rev-list --left-right --count HEAD...@{u} 2>/dev/null); then
-      read -r behind ahead <<<"$counts"
+      read -r ahead behind <<<"$counts"
       DOTFILES_SYNC_BEHIND=$behind
       DOTFILES_SYNC_AHEAD=$ahead
       (( behind )) && DOTFILES_SYNC_ISSUES+=("behind $upstream by $behind commit(s)")
@@ -98,10 +98,10 @@ dotfiles_sync_commit_msg() {
 }
 
 dotfiles_sync_ahead_count() {
-  local counts ahead=0
+  local counts ahead=0 behind=0
   [[ -n ${DOTFILES_SYNC_UPSTREAM:-} ]] || return 0
   counts=$(git -C "$DOTFILES_SYNC_ROOT" rev-list --left-right --count HEAD...@{u} 2>/dev/null) || return 0
-  read -r _ ahead <<<"$counts"
+  read -r ahead behind <<<"$counts"
   printf '%s' "$ahead"
 }
 
