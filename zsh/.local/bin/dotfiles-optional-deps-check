@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Warn when optional tools for dotfiles integrations are missing.
-# Runs from ~/.zshrc (once per day). Force: DOTFILES_OPTIONAL_DEPS_FORCE=1
+# Runs from 130-optional-deps.zsh (once per day). Force: DOTFILES_OPTIONAL_DEPS_FORCE=1
 
 [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]] || exit 0
 command -v apt-get &>/dev/null || exit 0
@@ -66,6 +66,9 @@ for entry in "${_deps[@]}"; do
 
   if [[ $label == 'fzf' ]]; then
     _has_cmd "${bins[@]}" || [[ -x ${HOME}/.fzf/bin/fzf ]] && continue
+  elif [[ $label == 'better-commits' ]]; then
+    _has_cmd "${bins[@]}" && continue
+    command -v fnm &>/dev/null && fnm exec -- command -v better-commits &>/dev/null && continue
   elif _has_cmd "${bins[@]}"; then
     continue
   fi

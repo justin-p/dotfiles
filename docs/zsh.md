@@ -70,7 +70,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 
 ## Tooling
 
-- **fnm** — `~/.local/share/fnm` on `PATH` when present; `fnm env` deferred via `zsh-defer` (not the OMZ fnm plugin).
+- **fnm** — install to `~/.local/share/fnm` (install script or apt); `fnm install --lts` for Node. Binary on `PATH` via `~/.zpath.zsh`; `fnm env` deferred in `110-deferred.zsh` (Node/npm globals available right after the first prompt). Install globals with `npm install -g better-commits` (requires Node ≥ 20.19).
 - **cargo** — `~/.cargo/bin` on `PATH` in `~/.zpath.zsh`; `~/.cargo/env` deferred.
 - **zoxide** — `eval "$(zoxide init zsh)"` in `55-zoxide.zsh`; `_ZO_FZF_OPTS` set in `90-fzf-bindings.zsh`.
 - **fzf** — `FZF_DEFAULT_COMMAND` uses `fd` or `fdfind` when installed, else `find .`.
@@ -192,7 +192,7 @@ dotfiles: fix: sudo apt install bat fd-find eza; better-commits: npm install -g 
 DOTFILES_OPTIONAL_DEPS_FORCE=1 dotfiles-optional-deps-check   # re-check now
 ```
 
-Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fzf`, `chafa`, `poppler-utils`, `mupdf-tools` (`mutool`), `ffmpegthumbnailer`, `atool`, `exiftool` (`libimage-exiftool-perl`), `mediainfo`, `duf`, `btop`, `gping` (snap on Pop!_OS), `mtr-tiny`, `gh`, `better-commits` (npm). See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
+Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fzf`, `jq`, `chafa`, `poppler-utils`, `mupdf-tools` (`mutool`), `ffmpegthumbnailer`, `atool`, `exiftool` (`libimage-exiftool-perl`), `mediainfo`, `duf`, `btop`, `gping` (snap on Pop!_OS), `mtr-tiny`, `gh`, `better-commits` (npm via fnm). See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
 
 ## Gotchas
 
@@ -204,5 +204,5 @@ Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fz
 - Install [gping](https://github.com/orf/gping) and/or `mtr` for the `ping` wrapper; without either, plain `ping` is unchanged.
 - Install [eza](https://github.com/eza-community/eza) for the `ls` hint and `eza` wrapper; theme via `stow eza` — see [eza.md](eza.md). Pair with `stow smb` so mount ignores match your profiles.
 - Install [zoxide](https://github.com/ajeetdsouza/zoxide) separately if you want the `cd` wrapper; it is not an antidote plugin.
-- **fnm** — install [fnm](https://github.com/Schniz/fnm); `node`/`npm` are on `PATH` after deferred `fnm env` (right after the first prompt). Migrate from nvm: `fnm install --lts` then remove `~/.nvm`.
+- **fnm** — [fnm](https://github.com/Schniz/fnm) manages Node; `fnm env` is deferred so `node`/`npm` appear after the first prompt. `better-commits` needs Node ≥ 20.19: `fnm install --lts && npm install -g better-commits`.
 - Tab completion uses a cached dump at `~/.cache/zsh/zcompdump`. A full `compinit` rebuild runs on a schedule (`ZSH_COMPINIT_REFRESH_DAYS`, default 7) and prints `dotfiles: rebuilt zsh completion cache: …` to stderr. Force immediately: `ZSH_COMPINIT_REFRESH_FORCE=1 exec zsh`. Manual reset: `rm -f ~/.cache/zsh/zcompdump ~/.cache/zsh/zcompdump.zwc ~/.cache/zsh/zcompdump.refresh.stamp`.

@@ -13,7 +13,7 @@ Symlinks `~/.fzf.zsh`, `~/.fzf.bash`, and `~/.local/bin/fzf-file-preview`.
 
 ### Optional preview tools
 
-Installed via apt when missing — `~/.zshrc` runs `dotfiles-optional-deps-check` once per day. Example apt line:
+Installed via apt when missing — `130-optional-deps.zsh` runs `dotfiles-optional-deps-check` once per day. Example apt line:
 
 ```bash
 sudo apt install chafa poppler-utils mupdf-tools ffmpegthumbnailer atool exiftool mediainfo
