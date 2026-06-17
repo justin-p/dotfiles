@@ -55,7 +55,7 @@ Primary shell is **zsh** ([docs/zsh.md](docs/zsh.md)). Bash aliases ([docs/bash.
 |---------|-----------|----------|
 | `cat` | `bat` or `batcat` | [bat](https://github.com/sharkdp/bat) (`batcat` on Debian/Ubuntu) |
 | `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) `z` | `zoxide` on `PATH` |
-| `git commit` / bare `git add` | [better-commits](https://github.com/pvande/better-commits) | `npm` |
+| `git commit` / bare `git add` | [better-commits](https://github.com/pvande/better-commits) when installed; else hint + real git | `npm` |
 | `eza` | [eza](https://github.com/eza-community/eza) with defaults + SMB/tree ignores | `eza` on `PATH`; SMB profiles optional ([docs/eza.md](docs/eza.md)) |
 
 ### Zsh - warn only (still runs the original command)
@@ -78,6 +78,10 @@ Prints `Consider using <tool> instead.` when the modern tool is installed. Defin
 | `FZF_DEFAULT_COMMAND` | `fd --hidden --follow --exclude .git` | `find .` |
 
 See [docs/fzf.md](docs/fzf.md).
+
+### Dotfiles sync (`zsh/.local/bin/`)
+
+Once per day, `dotfiles-sync-check` warns when `~/.dotfiles` has uncommitted changes, is behind/ahead of upstream, or has unstowed package files. Run `dotfiles-sync-fix` to stow, commit (default message `chore(dotfiles): sync local changes`), pull, and push. See [docs/zsh.md](docs/zsh.md#dotfiles-sync-check).
 
 ### Git - pager ([docs/git.md](docs/git.md))
 

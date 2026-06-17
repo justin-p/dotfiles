@@ -23,6 +23,9 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `~/.zsh_plugins` | antidote plugin list |
 | `~/.zsh_alias` | Thin loader; sources `~/.zsh_alias.d/*.zsh` |
 | `~/.zsh_alias.d/*.zsh` | Aliases and command wrappers |
+| `~/.local/bin/dotfiles-sync-check` | Daily git/stow sync warning (via `125-dotfiles-sync.zsh`) |
+| `~/.local/bin/dotfiles-sync-fix` | Apply stow / commit / pull / push fixes |
+| `~/.local/bin/dotfiles-optional-deps-check` | Daily optional-tool warning (via `130-optional-deps.zsh`) |
 
 ### `~/.zshrc.d/` modules
 
@@ -31,7 +34,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `10-history.zsh` | History options and history-here paths |
 | `20-completion.zsh` | `fpath`, menu completion |
 | `30-antidote.zsh` | antidote clone; static `~/.zsh_plugins.zsh` bundle |
-| `35-compinit.zsh` | `compinit -C` with cached dump; full `compinit` every 7 days |
+| `35-compinit.zsh` | `compinit -C` with cached dump; scheduled full `compinit` rebuild |
 | `40-history-here.zsh` | Per-project history under `Documents/_customers` |
 | `50-tools.zsh` | `fd`/`bat` detection and bat cache |
 | `55-zoxide.zsh` | `zoxide init` (before aliases) |
@@ -79,7 +82,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 | `00-guards.zsh` | `_cursor_agent_shell`, `_prefer_tool_hint_skip` |
 | `05-prefer-tool-hint.zsh` | Shared hint helper for warn-only wrappers |
 | `10-basic.zsh` | `ii`, dircolors, grep color aliases |
-| `15-grep.zsh` | `grep` → `rg` hint when ripgrep installed |
+| `15-grep.zsh` | `grep` → `rg` hint when ripgrep installed (skipped while sourcing config) |
 | `20-bat.zsh` | `cat`, `chelp`, `bathelp`, `--help` global alias |
 | `30-git.zsh` | `git` better-commits wrapper, `gs` |
 | `40-cd.zsh` | zoxide `cd` wrapper |
@@ -97,7 +100,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 | `df` | Warns `Consider using duf instead.` when duf is installed; still runs plain `df` |
 | `htop` | Warns `Consider using btop instead.` when btop is installed; still runs plain `htop` |
 | `find` | Warns `Consider using fd/fdfind instead.` when installed; still runs plain `find` |
-| `grep` | Warns `Consider using rg instead.` when ripgrep is installed; still runs plain `grep` |
+| `grep` | Warns `Consider using rg instead.` when ripgrep is installed; skipped during config sourcing; still runs plain `grep` |
 | `ping` | Warns to use `gping` and/or `mtr` when installed; still runs plain `ping` |
 | `ls` | Warns `Consider using eza instead.` when eza is installed; still runs plain `ls` |
 | `eza` | Adds `--icons=auto --group-directories-first -Alh --git --header`; auto-ignores SMB mounts from `~/.config/smb/*.env`; tree mode (`-T`) also ignores `.git` — see [eza.md](eza.md) |
@@ -110,18 +113,35 @@ On interactive startup (once per day), `dotfiles-sync-check` warns when `~/.dotf
 
 - Uncommitted git changes
 - Behind/ahead of upstream (`git fetch` once per check; disable with `DOTFILES_SYNC_CHECK_FETCH=0`)
-- Stowed packages with new files not yet linked (`stow -n` per active package)
+- Stowed packages with new files not yet linked (`stow -n` on active packages only)
 
-When issues are found, it prints a one-line fix hint: `dotfiles-sync-fix` (preview with `dotfiles-sync-fix -n`).
+Example output (stderr):
 
-`dotfiles-sync-fix` runs, in order: `stow` → `git add -A && git commit -m "chore(dotfiles): sync local changes"` → `git pull` → `git push` (push is re-checked after commit). Override the message with `DOTFILES_SYNC_COMMIT_MSG`.
+```text
+dotfiles: repository out of sync: uncommitted changes (3 file(s)); unstowed packages: zsh
+dotfiles: fix: dotfiles-sync-fix (-n to preview)
+```
+
+Only `dotfiles:` is bold/yellow; `repository out of sync:` and `unstowed packages:` are yellow; issue details (counts, package names) are plain.
+
+`dotfiles-sync-fix` runs applicable steps in order (skips what does not apply):
+
+1. `stow` for unstowed packages
+2. `git add -A && git commit -m "chore(dotfiles): sync local changes"` (uses `command git` so the better-commits wrapper is bypassed)
+3. `git pull` if behind upstream
+4. `git push` if unpushed commits remain (re-checked after commit/pull)
+
+Override the commit message with `DOTFILES_SYNC_COMMIT_MSG`. Preview commands with `dotfiles-sync-fix -n`.
+
+Shared detection lives in `dotfiles-sync-lib.sh` (sourced by both scripts).
 
 Skipped under `CURSOR_AGENT` / `CURSOR_TRACE`.
 
 ```bash
-DOTFILES_SYNC_CHECK_FORCE=1 dotfiles-sync-check   # re-check now
-DOTFILES_SYNC_CHECK_FETCH=0 dotfiles-sync-check   # skip git fetch
-dotfiles-sync-fix -n                              # preview fixes
+DOTFILES_SYNC_CHECK_FORCE=1 dotfiles-sync-check    # re-check now
+DOTFILES_SYNC_CHECK_FETCH=0 dotfiles-sync-check    # skip git fetch
+dotfiles-sync-fix -n                               # preview fixes
+DOTFILES_SYNC_COMMIT_MSG="chore: tweak zsh" dotfiles-sync-fix
 DOTFILES_ROOT=~/other/dotfiles dotfiles-sync-check # non-default repo path
 ```
 
@@ -146,4 +166,4 @@ Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fz
 - Install [eza](https://github.com/eza-community/eza) for the `ls` hint and `eza` wrapper; theme via `stow eza` — see [eza.md](eza.md). Pair with `stow smb` so mount ignores match your profiles.
 - Install [zoxide](https://github.com/ajeetdsouza/zoxide) separately if you want the `cd` wrapper; it is not an antidote plugin.
 - `nvm` is sourced synchronously from `~/.zpath.zsh` when present (npm globals need the matching `node`).
-- Tab completion uses a cached dump at `~/.cache/zsh/zcompdump`. A full `compinit` (security check + rebuild) runs automatically on a schedule (`ZSH_COMPINIT_REFRESH_DAYS`, default 7) and prints `dotfiles: rebuilt zsh completion cache` to stderr. Force immediately: `ZSH_COMPINIT_REFRESH_FORCE=1 exec zsh`. Manual reset: `rm -f ~/.cache/zsh/zcompdump* ~/.cache/zsh/zcompdump.refresh.stamp`.
+- Tab completion uses a cached dump at `~/.cache/zsh/zcompdump`. A full `compinit` (security check + rebuild) runs on a schedule (`ZSH_COMPINIT_REFRESH_DAYS`, default 7) and prints `dotfiles: rebuilt zsh completion cache (reason; next refresh in N day(s))` to stderr. Force immediately: `ZSH_COMPINIT_REFRESH_FORCE=1 exec zsh`. Manual reset: `rm -f ~/.cache/zsh/zcompdump ~/.cache/zsh/zcompdump.zwc ~/.cache/zsh/zcompdump.refresh.stamp`.
