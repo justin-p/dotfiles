@@ -34,6 +34,9 @@ source ${ZDOTDIR:-~}/.antidote/antidote.zsh
 # Initialize Antidote's plugin system (loads plugin manager configuration)
 source <(antidote init)
 
+# appup (mdeboer/zsh-plugin-appup): zstyle must be set before the plugin loads
+zstyle ':omz:plugins:appup:docker' check-started yes
+
 # Load all plugins listed in ~/.zsh_plugins (one per line)
 antidote bundle < ~/.zsh_plugins
 

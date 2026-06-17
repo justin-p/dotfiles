@@ -24,6 +24,7 @@ _deps=(
   'ripgrep:rg:ripgrep:ripgrep:'
   'zoxide:zoxide:zoxide:zoxide:cargo install zoxide'
   'fzf:fzf:fzf:fzf:git clone to ~/.fzf (auto on first zsh login) or: sudo apt install fzf'
+  'jq:jq:jq:jq:'
   'chafa:chafa:chafa:chafa:'
   'PDF preview (pdftoppm):pdftoppm:poppler-utils:poppler-utils:'
   'PDF preview (mutool):mutool:mupdf-tools:mupdf-tools:'

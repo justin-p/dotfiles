@@ -46,5 +46,14 @@ MichaelAquilina/zsh-autoswitch-virtualenv
 # https://github.com/leonjza/history-here - Saves shell history per-directory, so your command recall is contextual to where you're working
 leonjza/history-here
 
+# https://github.com/mdeboer/zsh-plugin-appup - up/down/start/stop/restart/enter when compose or Vagrantfile is present
+mdeboer/zsh-plugin-appup
+
+# https://github.com/reegnz/jq-zsh-plugin - Interactive jq query builder (Alt+j)
+reegnz/jq-zsh-plugin
+
+# https://github.com/HeroesLament/zsh-tailscale-plugin - tailscale CLI tab completion
+HeroesLament/zsh-tailscale-plugin
+
 # Spaceship prompt
 spaceship-prompt/spaceship-prompt
