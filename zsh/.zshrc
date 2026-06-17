@@ -22,7 +22,10 @@ setopt SHARE_HISTORY                    # Share new lines across concurrent inte
 export HISTFILE=~/.zsh_history
 export HISTSIZE=50000
 export SAVEHIST=50000
-export HISTORY_HERE_AUTO_DIRS=(/home/justin-p/Documents/_customers/ )
+# Base folder for history-here per-project isolation (e.g., _customers/<project>).
+typeset -gr HISTORY_HERE_CUSTOMERS_ROOT="$HOME/Documents/_customers"
+# history-here requires a non-empty array; per-project matching is customized after the plugin loads.
+export HISTORY_HERE_AUTO_DIRS=("${HISTORY_HERE_CUSTOMERS_ROOT}/")
 
 # Check if the Antidote plugin manager is installed in ~/.antidote (or $ZDOTDIR/.antidote), clone if missing
 [[ -e ${ZDOTDIR:-~}/.antidote ]] || \
@@ -39,6 +42,27 @@ zstyle ':omz:plugins:appup:docker' check-started yes
 
 # Load all plugins listed in ~/.zsh_plugins (one per line)
 antidote bundle < ~/.zsh_plugins
+
+# history-here: per-project isolation under Documents/_customers (any subfolder name).
+if (( $+functions[_history_here_find_auto_root] )); then
+  functions[_history_here_find_auto_root_default]=$functions[_history_here_find_auto_root]
+  _history_here_find_auto_root() {
+    local _customers_root="$HISTORY_HERE_CUSTOMERS_ROOT"
+    if [[ "$PWD" == "$_customers_root" ]]; then
+      print -r -- ""
+      return
+    fi
+    if [[ "$PWD" == "$_customers_root"/* ]]; then
+      local _project="${${PWD#$_customers_root/}%%/*}"
+      if [[ -n "$_project" ]]; then
+        print -r -- "$_customers_root/$_project"
+        return
+      fi
+    fi
+    _history_here_find_auto_root_default
+  }
+  (( $+functions[_history_here_auto_switch_for_pwd] )) && _history_here_auto_switch_for_pwd
+fi
 
 # fd / fdfind (Debian/Ubuntu ship the binary as fdfind)
 typeset -g _FD_CMD=
