@@ -6,17 +6,9 @@ export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/snap/bin:$PATH"
 [[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 [[ -d "$HOME/.bun/bin" ]] && export BUN_INSTALL="$HOME/.bun" PATH="$BUN_INSTALL/bin:$PATH"
 
-# Interactive-only: nvm must load synchronously so npm globals match the active node.
+# Interactive-only: fnm binary on PATH; `fnm env` deferred in 110-deferred.zsh.
 if [[ -o interactive ]]; then
-  if [[ -d "$HOME/.local/share/fnm" ]]; then
-    export PATH="$HOME/.local/share/fnm:$PATH"
-  fi
-
-  if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    source "$NVM_DIR/nvm.sh"
-    [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-  fi
+  [[ -d "$HOME/.local/share/fnm" ]] && export PATH="$HOME/.local/share/fnm:$PATH"
 
   if [[ -n ${BUN_INSTALL:-} && -s "${BUN_INSTALL}/_bun" ]]; then
     source "${BUN_INSTALL}/_bun"

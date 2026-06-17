@@ -17,7 +17,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | File | Purpose |
 |------|---------|
 | `~/.zshenv` | Thin loader; sources `~/.zpath.zsh` |
-| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive nvm/fnm/bun) |
+| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive fnm/bun) |
 | `~/.zshrc` | Thin loader; sources `~/.zshrc.d/*.zsh` in order |
 | `~/.zshrc.d/*.zsh` | Modular init (history, antidote, fzf, PATH, deferred tooling) |
 | `~/.zsh_plugins` | antidote plugin list |
@@ -70,8 +70,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 
 ## Tooling
 
-- **fnm** — `~/.local/share/fnm` on `PATH`; `fnm env` deferred via `zsh-defer` (not the OMZ fnm plugin).
-- **nvm** — sourced synchronously in `~/.zpath.zsh` (interactive) so npm globals match the active node version.
+- **fnm** — `~/.local/share/fnm` on `PATH` when present; `fnm env` deferred via `zsh-defer` (not the OMZ fnm plugin).
 - **cargo** — `~/.cargo/bin` on `PATH` in `~/.zpath.zsh`; `~/.cargo/env` deferred.
 - **zoxide** — `eval "$(zoxide init zsh)"` in `55-zoxide.zsh`; `_ZO_FZF_OPTS` set in `90-fzf-bindings.zsh`.
 - **fzf** — `FZF_DEFAULT_COMMAND` uses `fd` or `fdfind` when installed, else `find .`.
@@ -205,5 +204,5 @@ Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fz
 - Install [gping](https://github.com/orf/gping) and/or `mtr` for the `ping` wrapper; without either, plain `ping` is unchanged.
 - Install [eza](https://github.com/eza-community/eza) for the `ls` hint and `eza` wrapper; theme via `stow eza` — see [eza.md](eza.md). Pair with `stow smb` so mount ignores match your profiles.
 - Install [zoxide](https://github.com/ajeetdsouza/zoxide) separately if you want the `cd` wrapper; it is not an antidote plugin.
-- `nvm` is sourced synchronously from `~/.zpath.zsh` when present (npm globals need the matching `node`).
+- **fnm** — install [fnm](https://github.com/Schniz/fnm); `node`/`npm` are on `PATH` after deferred `fnm env` (right after the first prompt). Migrate from nvm: `fnm install --lts` then remove `~/.nvm`.
 - Tab completion uses a cached dump at `~/.cache/zsh/zcompdump`. A full `compinit` rebuild runs on a schedule (`ZSH_COMPINIT_REFRESH_DAYS`, default 7) and prints `dotfiles: rebuilt zsh completion cache: …` to stderr. Force immediately: `ZSH_COMPINIT_REFRESH_FORCE=1 exec zsh`. Manual reset: `rm -f ~/.cache/zsh/zcompdump ~/.cache/zsh/zcompdump.zwc ~/.cache/zsh/zcompdump.refresh.stamp`.
