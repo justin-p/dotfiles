@@ -39,6 +39,7 @@ _deps=(
   'ping graph:gping:gping:gping:snap install gping'
   'ping trace:mtr:mtr-tiny:mtr-tiny:'
   'GitHub CLI:gh:gh:gh:'
+  'fnm:fnm:fnm:fnm:curl -fsSL https://fnm.vercel.app/install | bash'
   'better-commits:better-commits::better-commits:npm install -g better-commits'
 )
 
@@ -66,6 +67,9 @@ for entry in "${_deps[@]}"; do
 
   if [[ $label == 'fzf' ]]; then
     _has_cmd "${bins[@]}" || [[ -x ${HOME}/.fzf/bin/fzf ]] && continue
+  elif [[ $label == 'fnm' ]]; then
+    _has_cmd fnm && continue
+    [[ -x ${HOME}/.local/share/fnm/fnm ]] && continue
   elif [[ $label == 'better-commits' ]]; then
     _has_cmd "${bins[@]}" && continue
     command -v fnm &>/dev/null && fnm exec -- command -v better-commits &>/dev/null && continue

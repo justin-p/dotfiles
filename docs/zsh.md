@@ -17,7 +17,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | File | Purpose |
 |------|---------|
 | `~/.zshenv` | Thin loader; sources `~/.zpath.zsh` |
-| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive fnm/bun) |
+| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive fnm on `PATH`) |
 | `~/.zshrc` | Thin loader; sources `~/.zshrc.d/*.zsh` in order |
 | `~/.zshrc.d/*.zsh` | Modular init (history, antidote, fzf, PATH, deferred tooling) |
 | `~/.zsh_plugins` | antidote plugin list |
@@ -36,6 +36,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `15-dotfiles-msg.zsh` | `_dotfiles_msg` shared stderr formatter |
 | `20-completion.zsh` | `fpath`, menu completion |
 | `30-antidote.zsh` | antidote clone; static `~/.zsh_plugins.zsh` bundle |
+| `32-history-substring-search.zsh` | ↑/↓ history prefix search bindkeys |
 | `35-compinit.zsh` | `compinit -C` with cached dump; scheduled full `compinit` rebuild |
 | `40-history-here.zsh` | Per-project history under `Documents/_customers` |
 | `50-tools.zsh` | `fd`/`bat` detection and bat cache |
@@ -45,7 +46,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `80-fzf-theme.zsh` | fzf/bat theme (COSMIC, Cursor, VS Code) |
 | `90-fzf-bindings.zsh` | fzf key bindings, `FZF_DEFAULT_COMMAND`, zoxide fzf opts (`_ZO_FZF_OPTS`) |
 | `95-fzf-tab.zsh` | fzf-tab previews and completion zstyles |
-| `110-deferred.zsh` | Deferred fnm/cargo init (`romkatv/zsh-defer`) |
+| `110-deferred.zsh` | Deferred fnm/bun/cargo init (`romkatv/zsh-defer`) |
 | `120-virtualenv.zsh` | `enable_autoswitch_virtualenv` |
 | `125-dotfiles-sync.zsh` | Daily dotfiles git/stow sync check |
 | `130-optional-deps.zsh` | Daily optional-deps check |
@@ -70,7 +71,8 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 
 ## Tooling
 
-- **fnm** — install to `~/.local/share/fnm` (install script or apt); `fnm install --lts` for Node. Binary on `PATH` via `~/.zpath.zsh`; `fnm env` deferred in `110-deferred.zsh` (Node/npm globals available right after the first prompt). Install globals with `npm install -g better-commits` (requires Node ≥ 20.19).
+- **fnm** — install to `~/.local/share/fnm` (install script or apt); `fnm install --lts` for Node. Binary on `PATH` via `~/.zpath.zsh`; `fnm env` deferred in `110-deferred.zsh` (Node/npm globals available right after the first prompt). Install globals with `npm install -g better-commits` (requires Node ≥ 20.19). Warned by optional-deps when missing.
+- **bun** — `~/.bun/bin` on `PATH` in `~/.zpath.zsh`; `_bun` completion deferred in `110-deferred.zsh`.
 - **cargo** — `~/.cargo/bin` on `PATH` in `~/.zpath.zsh`; `~/.cargo/env` deferred.
 - **zoxide** — `eval "$(zoxide init zsh)"` in `55-zoxide.zsh`; `_ZO_FZF_OPTS` set in `90-fzf-bindings.zsh`.
 - **fzf** — `FZF_DEFAULT_COMMAND` uses `fd` or `fdfind` when installed, else `find .`.
@@ -192,7 +194,7 @@ dotfiles: fix: sudo apt install bat fd-find eza; better-commits: npm install -g 
 DOTFILES_OPTIONAL_DEPS_FORCE=1 dotfiles-optional-deps-check   # re-check now
 ```
 
-Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fzf`, `jq`, `chafa`, `poppler-utils`, `mupdf-tools` (`mutool`), `ffmpegthumbnailer`, `atool`, `exiftool` (`libimage-exiftool-perl`), `mediainfo`, `duf`, `btop`, `gping` (snap on Pop!_OS), `mtr-tiny`, `gh`, `better-commits` (npm via fnm). See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
+Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fzf`, `jq`, `chafa`, `poppler-utils`, `mupdf-tools` (`mutool`), `ffmpegthumbnailer`, `atool`, `exiftool` (`libimage-exiftool-perl`), `mediainfo`, `duf`, `btop`, `gping` (snap on Pop!_OS), `mtr-tiny`, `gh`, `fnm`, `better-commits` (npm via fnm). See [fzf.md](fzf.md) and [README.md](../README.md) for what each enables.
 
 ## Gotchas
 

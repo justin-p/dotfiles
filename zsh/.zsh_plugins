@@ -31,6 +31,9 @@ Aloxaf/fzf-tab
 # https://github.com/zsh-users/zsh-autosuggestions - Suggests commands based on your history as you type
 zsh-users/zsh-autosuggestions
 
+# https://github.com/zsh-users/zsh-history-substring-search - Up/down filters history by typed prefix
+zsh-users/zsh-history-substring-search
+
 # https://github.com/zdharma-continuum/fast-syntax-highlighting - Highlights shell syntax as you type (load after autosuggestions)
 zdharma-continuum/fast-syntax-highlighting
 

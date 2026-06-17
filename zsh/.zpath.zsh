@@ -9,8 +9,4 @@ export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:/snap/bin:$PATH"
 # Interactive-only: fnm binary on PATH; `fnm env` deferred in 110-deferred.zsh.
 if [[ -o interactive ]]; then
   [[ -d "$HOME/.local/share/fnm" ]] && export PATH="$HOME/.local/share/fnm:$PATH"
-
-  if [[ -n ${BUN_INSTALL:-} && -s "${BUN_INSTALL}/_bun" ]]; then
-    source "${BUN_INSTALL}/_bun"
-  fi
 fi
