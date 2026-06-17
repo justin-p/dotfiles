@@ -33,13 +33,14 @@ done
 command -v git &>/dev/null || { echo "dotfiles-sync-fix: git not found" >&2; exit 1; }
 command -v stow &>/dev/null || { echo "dotfiles-sync-fix: stow not found" >&2; exit 1; }
 
-_lib=${BASH_SOURCE[0]%/*}/dotfiles-sync-lib.sh
-[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-sync-lib.sh
+_lib=${BASH_SOURCE[0]%/*}/dotfiles-lib.sh
+[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-lib.sh
 # shellcheck source=/dev/null
 source "$_lib"
 
 dotfiles_sync_detect 1 || exit 1
-(( ${#DOTFILES_SYNC_ISSUES[@]} )) || exit 0
+ahead=$(dotfiles_sync_ahead_count)
+(( ${#DOTFILES_SYNC_ISSUES[@]} || ahead || DOTFILES_SYNC_BEHIND )) || exit 0
 
 cd "$DOTFILES_SYNC_ROOT"
 

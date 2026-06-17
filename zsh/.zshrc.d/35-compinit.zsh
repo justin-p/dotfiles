@@ -32,12 +32,7 @@ if _zcompdump_needs_refresh; then
   compinit -d "$_zcompdump"
   _zcompdump_now >|"$_zcompdump_stamp"
 
-  if command -v tput &>/dev/null && [[ -n ${TERM:-} ]]; then
-    local yellow="$(tput setaf 3)$(tput bold)" reset="$(tput sgr0)"
-    print -u2 "${yellow}dotfiles:${reset} rebuilt zsh completion cache (${_zcompdump_reason}; next refresh in ${_zcompdump_refresh_days} day(s))"
-  else
-    print -u2 "dotfiles: rebuilt zsh completion cache (${_zcompdump_reason}; next refresh in ${_zcompdump_refresh_days} day(s))"
-  fi
+  _dotfiles_msg "rebuilt zsh completion cache" "${_zcompdump_reason}; next refresh in ${_zcompdump_refresh_days} day(s)"
   unset _zcompdump_reason
 else
   compinit -C -d "$_zcompdump"

@@ -60,7 +60,7 @@ Primary shell is **zsh** ([docs/zsh.md](docs/zsh.md)). Bash aliases ([docs/bash.
 
 ### Zsh - warn only (still runs the original command)
 
-Prints `Consider using <tool> instead.` when the modern tool is installed. Defined in `zsh/.zsh_alias.d/`; needs the optional tool on `PATH`.
+Prints `dotfiles: consider using: <tool>` when the modern tool is installed. Defined in `zsh/.zsh_alias.d/`; needs the optional tool on `PATH`.
 
 | Command | Suggests | Requires |
 |---------|----------|----------|

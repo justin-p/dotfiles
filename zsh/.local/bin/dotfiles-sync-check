@@ -7,8 +7,8 @@
 command -v git &>/dev/null || exit 0
 command -v stow &>/dev/null || exit 0
 
-_lib=${BASH_SOURCE[0]%/*}/dotfiles-sync-lib.sh
-[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-sync-lib.sh
+_lib=${BASH_SOURCE[0]%/*}/dotfiles-lib.sh
+[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-lib.sh
 # shellcheck source=/dev/null
 source "$_lib"
 
@@ -26,19 +26,8 @@ dotfiles_sync_detect "$fetch" || exit 0
 echo "$today" >"$stamp"
 (( ${#DOTFILES_SYNC_ISSUES[@]} )) || exit 0
 
-dotfiles_sync_colors
-yb=$DOTFILES_SYNC_YELLOW_BOLD y=$DOTFILES_SYNC_YELLOW r=$DOTFILES_SYNC_RESET
-
-formatted_issues=()
-for issue in "${DOTFILES_SYNC_ISSUES[@]}"; do
-  if [[ $issue == unstowed\ packages:* ]]; then
-    formatted_issues+=("${y}unstowed packages:${r} ${issue#unstowed packages: }")
-  else
-    formatted_issues+=("$issue")
-  fi
-done
-summary=$(printf '%s; ' "${formatted_issues[@]}")
+summary=$(printf '%s; ' "${DOTFILES_SYNC_ISSUES[@]}")
 summary=${summary%; }
 
-printf '%s\n' "${yb}dotfiles:${r} ${y}repository out of sync:${r} ${summary}" >&2
-printf '%s\n' "${yb}dotfiles:${r} ${y}fix:${r} dotfiles-sync-fix ${y}(-n to preview)${r}" >&2
+dotfiles_msg "repository out of sync" "$summary"
+dotfiles_msg fix "dotfiles-sync-fix (-n to preview)"

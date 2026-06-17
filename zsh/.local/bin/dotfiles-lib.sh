@@ -1,8 +1,33 @@
 #!/usr/bin/env bash
-# Shared detection for dotfiles-sync-check and dotfiles-sync-fix.
-# Sets: DOTFILES_SYNC_ROOT, DOTFILES_SYNC_DIRTY_COUNT, DOTFILES_SYNC_BEHIND,
-#       DOTFILES_SYNC_AHEAD, DOTFILES_SYNC_UPSTREAM, DOTFILES_SYNC_UNSTOWED_PKGS,
-#       DOTFILES_SYNC_ISSUES (array of plain-text issue strings).
+# Shared helpers for dotfiles scripts (messages, sync detection/fix).
+# Sets (sync): DOTFILES_SYNC_ROOT, DOTFILES_SYNC_DIRTY_COUNT, DOTFILES_SYNC_BEHIND,
+#              DOTFILES_SYNC_AHEAD, DOTFILES_SYNC_UPSTREAM, DOTFILES_SYNC_UNSTOWED_PKGS,
+#              DOTFILES_SYNC_ISSUES
+
+dotfiles_colors() {
+  if command -v tput &>/dev/null && [[ -n ${TERM:-} ]]; then
+    DOTFILES_YB="$(tput bold)$(tput setaf 3)"
+    DOTFILES_Y="$(tput setaf 3)"
+    DOTFILES_R="$(tput sgr0)"
+  else
+    DOTFILES_YB=
+    DOTFILES_Y=
+    DOTFILES_R=
+  fi
+}
+
+# Usage: dotfiles_msg label [details]
+# Prints: dotfiles: <label>: <details>  (label yellow; details plain)
+dotfiles_msg() {
+  local label=$1
+  shift
+  dotfiles_colors
+  if (( $# )); then
+    printf '%s\n' "${DOTFILES_YB}dotfiles:${DOTFILES_R} ${DOTFILES_Y}${label}:${DOTFILES_R} $*" >&2
+  else
+    printf '%s\n' "${DOTFILES_YB}dotfiles:${DOTFILES_R} ${DOTFILES_Y}${label}:${DOTFILES_R}" >&2
+  fi
+}
 
 dotfiles_sync_detect() {
   local fetch=${1:-1}
@@ -106,7 +131,6 @@ dotfiles_sync_ahead_count() {
 }
 
 dotfiles_sync_fix_plan() {
-  # Prints one fix command per detected issue (stdout).
   local root=$DOTFILES_SYNC_ROOT
   local msg
   msg=$(dotfiles_sync_commit_msg)
@@ -120,20 +144,7 @@ dotfiles_sync_fix_plan() {
   if (( DOTFILES_SYNC_BEHIND )); then
     printf 'cd %q && git pull\n' "$root"
   fi
-  # Commit creates unpushed commits; push is re-checked after commit in dotfiles-sync-fix.
   if [[ -n $DOTFILES_SYNC_UPSTREAM ]] && (( DOTFILES_SYNC_AHEAD || DOTFILES_SYNC_DIRTY_COUNT )); then
     printf 'cd %q && git push\n' "$root"
-  fi
-}
-
-dotfiles_sync_colors() {
-  if command -v tput &>/dev/null && [[ -n ${TERM:-} ]]; then
-    DOTFILES_SYNC_YELLOW_BOLD="$(tput bold)$(tput setaf 3)"
-    DOTFILES_SYNC_YELLOW="$(tput setaf 3)"
-    DOTFILES_SYNC_RESET="$(tput sgr0)"
-  else
-    DOTFILES_SYNC_YELLOW_BOLD=
-    DOTFILES_SYNC_YELLOW=
-    DOTFILES_SYNC_RESET=
   fi
 }

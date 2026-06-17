@@ -5,6 +5,11 @@
 [[ -z ${CURSOR_AGENT:-}${CURSOR_TRACE:-} ]] || exit 0
 command -v apt-get &>/dev/null || exit 0
 
+_lib=${BASH_SOURCE[0]%/*}/dotfiles-lib.sh
+[[ -f $_lib ]] || _lib=${HOME}/.dotfiles/zsh/.local/bin/dotfiles-lib.sh
+# shellcheck source=/dev/null
+source "$_lib"
+
 stamp=${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-optional-deps.stamp
 mkdir -p "${stamp%/*}"
 today=$(date +%Y%m%d)
@@ -13,9 +18,6 @@ if [[ ${DOTFILES_OPTIONAL_DEPS_FORCE:-} != 1 ]] && [[ -f $stamp ]] && [[ $(<"$st
 fi
 
 # label:cmds,…:apt_pkg:apt_install_name:other_hint
-# cmds: comma-separated binaries (any one satisfies)
-# apt_install_name: user-facing name for "sudo apt install …" (defaults to apt_pkg)
-# other_hint: used when apt_pkg is empty or not in your apt repos
 _deps=(
   'bat:bat,batcat:bat:bat:'
   'fd:fd,fdfind:fd-find:fd-find:'
@@ -83,16 +85,11 @@ done
 echo "$today" > "$stamp"
 (( ${#missing_labels[@]} )) || exit 0
 
-if command -v tput &>/dev/null && [[ -n ${TERM:-} ]]; then
-  yellow=$(tput setaf 3)$(tput bold)
-  reset=$(tput sgr0)
-else
-  yellow= reset=
-fi
+# Comma-separated labels (labels may contain spaces).
+missing_list=$(printf '%s, ' "${missing_labels[@]}")
+missing_list=${missing_list%, }
 
-printf '%s\n' "${yellow}dotfiles: optional tools not installed:${reset}" >&2
-printf '  %s\n' "${missing_labels[*]}" >&2
-
+fix_parts=()
 if (( ${#apt_install[@]} )); then
   declare -A _seen=()
   apt_unique=()
@@ -101,10 +98,14 @@ if (( ${#apt_install[@]} )); then
     _seen[$pkg]=1
     apt_unique+=("$pkg")
   done
-  printf '%s\n' "${yellow}Install (apt):${reset} sudo apt install ${apt_unique[*]}" >&2
+  fix_parts+=("sudo apt install ${apt_unique[*]}")
+fi
+if (( ${#other_hints[@]} )); then
+  fix_parts+=("$(IFS='; '; echo "${other_hints[*]}")")
 fi
 
-if (( ${#other_hints[@]} )); then
-  printf '%s\n' "${yellow}Install (other):${reset}" >&2
-  printf '  %s\n' "${other_hints[@]}" >&2
+dotfiles_msg "optional tools not installed" "$missing_list"
+if (( ${#fix_parts[@]} )); then
+  fix_line=$(IFS='; '; echo "${fix_parts[*]}")
+  dotfiles_msg fix "$fix_line"
 fi
