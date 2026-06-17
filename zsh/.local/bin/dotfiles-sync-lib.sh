@@ -97,6 +97,14 @@ dotfiles_sync_commit_msg() {
   printf '%s' "${DOTFILES_SYNC_COMMIT_MSG:-chore(dotfiles): sync local changes}"
 }
 
+dotfiles_sync_ahead_count() {
+  local counts ahead=0
+  [[ -n ${DOTFILES_SYNC_UPSTREAM:-} ]] || return 0
+  counts=$(git -C "$DOTFILES_SYNC_ROOT" rev-list --left-right --count HEAD...@{u} 2>/dev/null) || return 0
+  read -r _ ahead <<<"$counts"
+  printf '%s' "$ahead"
+}
+
 dotfiles_sync_fix_plan() {
   # Prints one fix command per detected issue (stdout).
   local root=$DOTFILES_SYNC_ROOT
@@ -112,7 +120,8 @@ dotfiles_sync_fix_plan() {
   if (( DOTFILES_SYNC_BEHIND )); then
     printf 'cd %q && git pull\n' "$root"
   fi
-  if (( DOTFILES_SYNC_AHEAD )); then
+  # Commit creates unpushed commits; push is re-checked after commit in dotfiles-sync-fix.
+  if [[ -n $DOTFILES_SYNC_UPSTREAM ]] && (( DOTFILES_SYNC_AHEAD || DOTFILES_SYNC_DIRTY_COUNT )); then
     printf 'cd %q && git push\n' "$root"
   fi
 }

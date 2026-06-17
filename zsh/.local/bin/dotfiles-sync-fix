@@ -16,7 +16,7 @@ Runs, in order:
   1. stow for unstowed packages
   2. git add -A && git commit -m "…"   (if uncommitted changes; default message below)
   3. git pull                   (if behind upstream)
-  4. git push                   (if ahead of upstream)
+  4. git push                   (if unpushed commits after the above)
 
 -n, --dry-run  Print commands without running them.
 
@@ -64,6 +64,6 @@ if (( DOTFILES_SYNC_BEHIND )); then
   git pull
 fi
 
-if (( DOTFILES_SYNC_AHEAD )); then
+if [[ -n $DOTFILES_SYNC_UPSTREAM ]] && (( $(dotfiles_sync_ahead_count) )); then
   git push
 fi

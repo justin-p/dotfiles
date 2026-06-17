@@ -114,7 +114,7 @@ On interactive startup (once per day), `dotfiles-sync-check` warns when `~/.dotf
 
 When issues are found, it prints a one-line fix hint: `dotfiles-sync-fix` (preview with `dotfiles-sync-fix -n`).
 
-`dotfiles-sync-fix` runs, in order: `stow` → `git add -A && git commit -m "chore(dotfiles): sync local changes"` → `git pull` → `git push` (skips steps that do not apply). Override the message with `DOTFILES_SYNC_COMMIT_MSG`.
+`dotfiles-sync-fix` runs, in order: `stow` → `git add -A && git commit -m "chore(dotfiles): sync local changes"` → `git pull` → `git push` (push is re-checked after commit). Override the message with `DOTFILES_SYNC_COMMIT_MSG`.
 
 Skipped under `CURSOR_AGENT` / `CURSOR_TRACE`.
 
