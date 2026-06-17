@@ -29,16 +29,16 @@ ohmyzsh/ohmyzsh path:plugins/safe-paste          # Escape pasted text so multili
 Aloxaf/fzf-tab
 
 # https://github.com/zsh-users/zsh-autosuggestions - Suggests commands based on your history as you type
-zsh-users/zsh-autosuggestions
+zsh-users/zsh-autosuggestions kind:defer
 
 # https://github.com/zsh-users/zsh-history-substring-search - Up/down filters history by typed prefix
 zsh-users/zsh-history-substring-search
 
 # https://github.com/zdharma-continuum/fast-syntax-highlighting - Highlights shell syntax as you type (load after autosuggestions)
-zdharma-continuum/fast-syntax-highlighting
+zdharma-continuum/fast-syntax-highlighting kind:defer
 
 # https://github.com/MichaelAquilina/zsh-you-should-use - Reminds you when a typed command has an alias
-MichaelAquilina/zsh-you-should-use
+MichaelAquilina/zsh-you-should-use kind:defer
 
 # https://github.com/zsh-users/zsh-completions - Adds many extra command completions for zsh
 zsh-users/zsh-completions

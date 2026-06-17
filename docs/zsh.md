@@ -77,6 +77,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 - **zoxide** — `eval "$(zoxide init zsh)"` in `55-zoxide.zsh`; `_ZO_FZF_OPTS` set in `90-fzf-bindings.zsh`.
 - **fzf** — `FZF_DEFAULT_COMMAND` uses `fd` or `fdfind` when installed, else `find .`.
 - **fzf-tab** — previews for paths (`fzf-file-preview`), `man`, `kill`/`ps`, git (delta/bat), and docker containers. See [fzf.md](fzf.md).
+- **Deferred plugins** — `zsh-autosuggestions`, `fast-syntax-highlighting`, and `zsh-you-should-use` use antidote `kind:defer` (via `romkatv/zsh-defer`); they load when ZLE is idle after the prompt appears, not during non-interactive runs like `zsh -i -c exit`.
 
 ### `~/.zsh_alias.d/` modules
 
@@ -198,7 +199,6 @@ Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fz
 
 ## Gotchas
 
-- Some paths are user-specific (`/home/justin-p/...`).
 - `better-commits`, `zoxide`, `cat`, `df`, `htop`, `find`, `grep`, `ping`, and `ls` wrappers are disabled under `CURSOR_AGENT` / `CURSOR_TRACE`.
 - Install [duf](https://github.com/muesli/duf) for the `df` wrapper; without it, plain `df` is unchanged.
 - Install [btop](https://github.com/aristocratos/btop) for the `htop` wrapper; without it, plain `htop` is unchanged.
