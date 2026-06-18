@@ -17,7 +17,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | File | Purpose |
 |------|---------|
 | `~/.zshenv` | Thin loader; sources `~/.zpath.zsh` |
-| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive fnm on `PATH`) |
+| `~/.zpath.zsh` | PATH and toolchain setup (all shells + interactive fnm/bun) |
 | `~/.zshrc` | Thin loader; sources `~/.zshrc.d/*.zsh` in order |
 | `~/.zshrc.d/*.zsh` | Modular init (history, antidote, fzf, PATH, deferred tooling) |
 | `~/.zsh_plugins` | antidote plugin list |
@@ -46,7 +46,7 @@ Pair with `cosmic-term` for matching fzf colors — see [cosmic-term.md](cosmic-
 | `80-fzf-theme.zsh` | fzf/bat theme (COSMIC, Cursor, VS Code) |
 | `90-fzf-bindings.zsh` | fzf key bindings, `FZF_DEFAULT_COMMAND`, zoxide fzf opts (`_ZO_FZF_OPTS`) |
 | `95-fzf-tab.zsh` | fzf-tab previews and completion zstyles |
-| `110-deferred.zsh` | Deferred fnm/bun/cargo init (`romkatv/zsh-defer`) |
+| `110-deferred.zsh` | Deferred bun/cargo init (`romkatv/zsh-defer`) |
 | `120-virtualenv.zsh` | `enable_autoswitch_virtualenv` |
 | `125-dotfiles-sync.zsh` | Daily dotfiles git/stow sync check |
 | `130-optional-deps.zsh` | Daily optional-deps check |
@@ -71,7 +71,7 @@ TPM for tmux is installed separately — see [tmux.md](tmux.md).
 
 ## Tooling
 
-- **fnm** — install to `~/.local/share/fnm` (install script or apt); `fnm install --lts` for Node. Binary on `PATH` via `~/.zpath.zsh`; `fnm env` deferred in `110-deferred.zsh` (Node/npm globals available right after the first prompt). Install globals with `npm install -g better-commits` (requires Node ≥ 20.19). Warned by optional-deps when missing.
+- **fnm** — install to `~/.local/share/fnm` (install script or apt); `fnm install --lts` for Node. `fnm env` sourced synchronously in `~/.zpath.zsh` (interactive). Install globals with `npm install -g better-commits` (requires Node ≥ 20.19). Warned by optional-deps when missing.
 - **bun** — `~/.bun/bin` on `PATH` in `~/.zpath.zsh`; `_bun` completion deferred in `110-deferred.zsh`.
 - **cargo** — `~/.cargo/bin` on `PATH` in `~/.zpath.zsh`; `~/.cargo/env` deferred.
 - **zoxide** — `eval "$(zoxide init zsh)"` in `55-zoxide.zsh`; `_ZO_FZF_OPTS` set in `90-fzf-bindings.zsh`.
@@ -206,5 +206,5 @@ Packages checked: `bat`, `fd-find`, `eza`, `git-delta`, `ripgrep`, `zoxide`, `fz
 - Install [gping](https://github.com/orf/gping) and/or `mtr` for the `ping` wrapper; without either, plain `ping` is unchanged.
 - Install [eza](https://github.com/eza-community/eza) for the `ls` hint and `eza` wrapper; theme via `stow eza` — see [eza.md](eza.md). Pair with `stow smb` so mount ignores match your profiles.
 - Install [zoxide](https://github.com/ajeetdsouza/zoxide) separately if you want the `cd` wrapper; it is not an antidote plugin.
-- **fnm** — [fnm](https://github.com/Schniz/fnm) manages Node; `fnm env` is deferred so `node`/`npm` appear after the first prompt. `better-commits` needs Node ≥ 20.19: `fnm install --lts && npm install -g better-commits`.
+- **fnm** — [fnm](https://github.com/Schniz/fnm) manages Node; loaded from `~/.zpath.zsh` in interactive shells. `better-commits` needs Node ≥ 20.19: `fnm install --lts && npm install -g better-commits` (never `sudo npm`; system `/usr/bin/node` is v18).
 - Tab completion uses a cached dump at `~/.cache/zsh/zcompdump`. A full `compinit` rebuild runs on a schedule (`ZSH_COMPINIT_REFRESH_DAYS`, default 7) and prints `dotfiles: rebuilt zsh completion cache: …` to stderr. Force immediately: `ZSH_COMPINIT_REFRESH_FORCE=1 exec zsh`. Manual reset: `rm -f ~/.cache/zsh/zcompdump ~/.cache/zsh/zcompdump.zwc ~/.cache/zsh/zcompdump.refresh.stamp`.
