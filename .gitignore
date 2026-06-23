@@ -8,6 +8,11 @@ smb/.config/smb/*.credentials
 !smb/.config/smb/*.env.example
 !smb/.config/smb/*.credentials.example
 
+# copyparty-webdav (local secrets; stow-compatible paths)
+copyparty-webdav/.config/copyparty-webdav/env
+copyparty-webdav/.config/copyparty-webdav/credentials
+!copyparty-webdav/.config/copyparty-webdav/*.example
+
 # Python bytecode
 __pycache__/
 

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# shellcheck source=copyparty-webdav-lib.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/copyparty-webdav-lib.sh"
+
+copyparty_load_config
+copyparty_validate_rclone
+
+mkdir -p "${MOUNT_POINT}" "${HOME}/.local/share"
+
+if mountpoint -q "${MOUNT_POINT}" 2>/dev/null; then
+  if [[ "${1:-}" == "--foreground" ]]; then
+    echo "Already mounted at ${MOUNT_POINT}, supervising..."
+    while mountpoint -q "${MOUNT_POINT}" 2>/dev/null; do sleep 30; done
+    echo "Mount disappeared at ${MOUNT_POINT}" >&2
+    exit 1
+  fi
+  echo "Already mounted at ${MOUNT_POINT}"
+  ls -la "${MOUNT_POINT}"
+  exit 0
+fi
+
+if pgrep -af 'cursor|Cursor' >/dev/null 2>&1 && [[ "${TERM_PROGRAM:-}" == "vscode" || -n "${VSCODE_IPC_HOOK_CLI:-}" ]]; then
+  echo "Note: Cursor's terminal blocks FUSE mounts. Use GNOME Terminal / Konsole if this fails." >&2
+fi
+
+mount_args=(
+  mount
+  --vfs-cache-mode writes
+  --dir-cache-time 5s
+  "${RCLONE_REMOTE}:"
+  "${MOUNT_POINT}"
+  --log-file "${LOG}"
+  --log-level "${RCLONE_LOG_LEVEL}"
+  --log-file-max-size "${RCLONE_LOG_MAX_SIZE}"
+  --log-file-max-age "${RCLONE_LOG_MAX_AGE}"
+  --log-file-max-backups "${RCLONE_LOG_MAX_BACKUPS}"
+)
+
+if [[ "${1:-}" == "--foreground" ]]; then
+  echo "Mounting ${RCLONE_REMOTE} at ${MOUNT_POINT} (foreground)..."
+  exec "${RCLONE}" "${mount_args[@]}"
+fi
+
+echo "Mounting ${RCLONE_REMOTE} at ${MOUNT_POINT}..."
+if ! "${RCLONE}" "${mount_args[@]}" --daemon; then
+  echo "rclone mount command failed — see ${LOG}" >&2
+  tail -5 "${LOG}" 2>/dev/null >&2
+  exit 1
+fi
+
+sleep 2
+
+if mountpoint -q "${MOUNT_POINT}" 2>/dev/null; then
+  echo "${RCLONE_REMOTE} mounted at ${MOUNT_POINT}"
+  ls -la "${MOUNT_POINT}"
+else
+  echo "Mount failed — ${MOUNT_POINT} is just an empty folder, not a live mount." >&2
+  echo "This usually means fusermount was blocked. Open a normal terminal (not Cursor) and run:" >&2
+  echo "  copyparty-webdav-mount" >&2
+  if [[ -f "${LOG}" ]]; then
+    echo >&2
+    tail -5 "${LOG}" >&2
+  fi
+  exit 1
+fi

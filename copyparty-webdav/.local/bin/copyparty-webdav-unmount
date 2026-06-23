@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# shellcheck source=copyparty-webdav-lib.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/copyparty-webdav-lib.sh"
+
+copyparty_load_config
+
+if mountpoint -q "${MOUNT_POINT}" 2>/dev/null; then
+  fusermount -u "${MOUNT_POINT}"
+  echo "Unmounted ${MOUNT_POINT}"
+else
+  echo "Not mounted at ${MOUNT_POINT}"
+fi

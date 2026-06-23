@@ -17,6 +17,7 @@ Used by https://github.com/justin-p/Setup-My-W10-Machine and https://github.com/
 | cosmic-term | Stow | [docs/cosmic-term.md](docs/cosmic-term.md) |
 | cosmic-theme | Manual | [docs/cosmic-theme.md](docs/cosmic-theme.md) |
 | cursor-sync | Stow | [docs/cursor-sync.md](docs/cursor-sync.md) |
+| copyparty-webdav | Stow | [docs/copyparty-webdav.md](docs/copyparty-webdav.md) |
 | eza | Stow | [docs/eza.md](docs/eza.md) |
 | fan_control | Manual | [docs/fan-control.md](docs/fan-control.md) |
 | firefox | Stow + script | [docs/firefox.md](docs/firefox.md) |

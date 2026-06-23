@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# shellcheck source=copyparty-webdav-lib.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/copyparty-webdav-lib.sh"
+
+copyparty_ensure_config_files
+copyparty_load_config
+
+RCLONE_INSTALL_DIR="${HOME}/.local/bin"
+RCLONE_VERSION_URL="https://downloads.rclone.org/rclone-current-linux-amd64.zip"
+
+copyparty_install_rclone() {
+  if [[ -x "${RCLONE}" ]]; then
+    return 0
+  fi
+
+  echo "Installing rclone to ${RCLONE_INSTALL_DIR}..."
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+  trap 'rm -rf "${tmpdir}"' EXIT
+
+  curl -fsSL "${RCLONE_VERSION_URL}" -o "${tmpdir}/rclone.zip"
+  unzip -qo "${tmpdir}/rclone.zip" -d "${tmpdir}/extract"
+  mkdir -p "${RCLONE_INSTALL_DIR}"
+  cp "${tmpdir}/extract"/rclone-*-linux-amd64/rclone "${RCLONE_INSTALL_DIR}/rclone"
+  chmod +x "${RCLONE_INSTALL_DIR}/rclone"
+  echo "Installed $("${RCLONE_INSTALL_DIR}/rclone" version | head -1)"
+}
+
+copyparty_configure_rclone_remote() {
+  if "${RCLONE}" listremotes 2>/dev/null | grep -qx "${RCLONE_REMOTE}:"; then
+    "${RCLONE}" config update "${RCLONE_REMOTE}" \
+      url "${WEBDAV_URL}" \
+      vendor owncloud \
+      pacer_min_sleep 0.01ms \
+      user "${WEBDAV_USER}" \
+      pass "${WEBDAV_PASS}"
+    echo "Updated rclone remote ${RCLONE_REMOTE}."
+  else
+    "${RCLONE}" config create "${RCLONE_REMOTE}" webdav \
+      url "${WEBDAV_URL}" \
+      vendor owncloud \
+      pacer_min_sleep 0.01ms \
+      user "${WEBDAV_USER}" \
+      pass "${WEBDAV_PASS}"
+    echo "Created rclone remote ${RCLONE_REMOTE}."
+  fi
+}
+
+copyparty_install_rclone
+copyparty_validate_rclone
+copyparty_configure_rclone_remote
+mkdir -p "${MOUNT_POINT}"
+
+echo "Testing ${RCLONE_REMOTE}..."
+"${RCLONE}" lsd "${RCLONE_REMOTE}:" | head -10
+
+echo
+echo "Setup complete. Mount with:"
+echo "  copyparty-webdav-mount"
+echo
+echo "Optional auto-mount on login:"
+echo "  systemctl --user enable --now rclone-copyparty-webdav.service"

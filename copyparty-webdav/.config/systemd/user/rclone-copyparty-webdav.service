@@ -1,0 +1,15 @@
+[Unit]
+Description=copyparty WebDAV mount (rclone)
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/copyparty-webdav/env
+ExecStart=%h/.local/bin/copyparty-webdav-mount --foreground
+ExecStop=%h/.local/bin/copyparty-webdav-unmount
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=default.target
